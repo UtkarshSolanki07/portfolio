@@ -1,26 +1,455 @@
 @import "tailwindcss";
 
+/* ══════════════════════════════════════════════
+   MAIN EVENT — Wrestling Portfolio Design System
+   ══════════════════════════════════════════════ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Core Palette */
+  --bg-dark: #0a0a0f;
+  --bg-darker: #06060a;
+  --bg-card: #12121a;
+  --bg-card-hover: #1a1a25;
+
+  /* Accent Colors */
+  --gold: #d4af37;
+  --gold-light: #f0d060;
+  --gold-dim: #8a7520;
+  --cyan: #00e5ff;
+  --cyan-dim: #007a8a;
+  --red-accent: #ff1744;
+  --red-dim: #8a0020;
+  --purple: #9c27b0;
+
+  /* Text */
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0b0;
+  --text-dim: #505060;
+
+  /* Arena */
+  --ring-floor: #1a1420;
+  --ring-rope-red: #cc0000;
+  --ring-rope-white: #e0e0e0;
+  --ring-post: #888888;
+  --arena-floor: #0d0d14;
+  --ramp-surface: #15151f;
+
+  /* Titantron */
+  --titantron-bg: #0a0a12;
+  --titantron-glow: rgba(0, 229, 255, 0.15);
+
+  /* UI Elements */
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-gold: rgba(212, 175, 55, 0.3);
+  --border-cyan: rgba(0, 229, 255, 0.3);
+  --glow-gold: 0 0 20px rgba(212, 175, 55, 0.4);
+  --glow-cyan: 0 0 20px rgba(0, 229, 255, 0.4);
+  --glow-red: 0 0 20px rgba(255, 23, 68, 0.4);
+
+  /* Fonts */
+  --font-display: "Barlow Condensed", sans-serif;
+  --font-body: "Rajdhani", sans-serif;
+  --font-mono: "Share Tech Mono", monospace;
+
+  /* Spacing */
+  --scene-padding: 2rem;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-smooth: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-dramatic: 600ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--bg-dark);
+  --color-foreground: var(--text-primary);
+  --color-gold: var(--gold);
+  --color-gold-light: var(--gold-light);
+  --color-gold-dim: var(--gold-dim);
+  --color-cyan: var(--cyan);
+  --color-cyan-dim: var(--cyan-dim);
+  --color-red-accent: var(--red-accent);
+  --color-red-dim: var(--red-dim);
+  --color-card: var(--bg-card);
+  --color-card-hover: var(--bg-card-hover);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-dim: var(--text-dim);
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ═══════ Base Reset ═══════ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg-dark);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ═══════ Scrollbar ═══════ */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-darker);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gold-dim);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold);
+}
+
+/* ═══════ Selection ═══════ */
+::selection {
+  background: rgba(212, 175, 55, 0.3);
+  color: var(--gold-light);
+}
+
+/* ═══════ Skip Link (A11y) ═══════ */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--gold);
+  color: var(--bg-dark);
+  padding: 0.75rem 1.5rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  z-index: 9999;
+  border-radius: 0 0 4px 4px;
+  transition: top var(--transition-fast);
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* ═══════ Animations ═══════ */
+
+/* EQ Bar Bounce */
+@keyframes eq-bar {
+  0%,
+  100% {
+    height: 12%;
+  }
+  10% {
+    height: 90%;
+  }
+  20% {
+    height: 45%;
+  }
+  30% {
+    height: 78%;
+  }
+  40% {
+    height: 32%;
+  }
+  50% {
+    height: 95%;
+  }
+  60% {
+    height: 55%;
+  }
+  70% {
+    height: 82%;
+  }
+  80% {
+    height: 38%;
+  }
+  90% {
+    height: 70%;
+  }
+}
+
+/* Glitch Flicker */
+@keyframes glitch {
+  0% {
+    clip-path: inset(40% 0 61% 0);
+    transform: translate(-2px, 2px);
+  }
+  20% {
+    clip-path: inset(92% 0 1% 0);
+    transform: translate(1px, -1px);
+  }
+  40% {
+    clip-path: inset(43% 0 1% 0);
+    transform: translate(-1px, 3px);
+  }
+  60% {
+    clip-path: inset(25% 0 58% 0);
+    transform: translate(3px, 1px);
+  }
+  80% {
+    clip-path: inset(54% 0 7% 0);
+    transform: translate(-3px, -2px);
+  }
+  100% {
+    clip-path: inset(58% 0 43% 0);
+    transform: translate(2px, -3px);
+  }
+}
+
+/* Scanline Sweep */
+@keyframes scanline {
+  0% {
+    top: -10%;
+  }
+  100% {
+    top: 110%;
+  }
+}
+
+/* Pulse Glow */
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Shimmer */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Logo Slam */
+@keyframes logo-slam {
+  0% {
+    transform: scale(3) translateY(-20px);
+    opacity: 0;
+    filter: blur(10px);
+  }
+  40% {
+    transform: scale(1.1) translateY(0);
+    opacity: 1;
+    filter: blur(0);
+  }
+  60% {
+    transform: scale(0.95);
+  }
+  80% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Fade Up */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Slide In Right */
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Bar Fill */
+@keyframes bar-fill {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+/* Diamond Rotate */
+@keyframes diamond-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Float */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Ticker Scroll */
+@keyframes ticker-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Spotlight Sway */
+@keyframes spotlight-sway {
+  0%,
+  100% {
+    transform: rotate(-15deg);
+  }
+  50% {
+    transform: rotate(15deg);
+  }
+}
+
+/* Crowd Wave */
+@keyframes crowd-wave {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(1.15);
+  }
+}
+
+/* Pyro Burst */
+@keyframes pyro-particle {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-200px) scale(0);
+    opacity: 0;
+  }
+}
+
+/* Text Reveal */
+@keyframes text-reveal {
+  0% {
+    clip-path: inset(0 100% 0 0);
+  }
+  100% {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* Ring Light Sweep */
+@keyframes ring-light-sweep {
+  0% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+/* Entrance Flash */
+@keyframes entrance-flash {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* ═══════ Utility Classes ═══════ */
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+.text-gold {
+  color: var(--gold);
+}
+
+.text-cyan {
+  color: var(--cyan);
+}
+
+.text-red-accent {
+  color: var(--red-accent);
+}
+
+.glow-gold {
+  box-shadow: var(--glow-gold);
+}
+
+.glow-cyan {
+  box-shadow: var(--glow-cyan);
+}
+
+.glow-red {
+  box-shadow: var(--glow-red);
+}
+
+.border-gold {
+  border-color: var(--gold);
+}
+
+/* ═══════ Reduced Motion ═══════ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

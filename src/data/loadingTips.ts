@@ -1,0 +1,17 @@
+export const loadingTips: string[] = [
+  'TIP: Press E for breaking news from the wrestling world of development.',
+  'TIP: Type "pipebomb" on your keyboard for a surprise promo.',
+  'TIP: The Konami Code still works. ↑↑↓↓←→←→BA. Try it.',
+  'TIP: Move your mouse fast enough and you might trigger a Controlled Frenzy.',
+  'TIP: Every click builds your Attitude Meter. Fill it up for a reward.',
+  "TIP: This portfolio was built entirely in TypeScript. No regrets. Mostly.",
+  'TIP: The MERN Stack is basically a finishing move at this point.',
+  'TIP: React Native — because one platform is never enough.',
+  'TIP: All 3D elements are procedurally generated. No Spline Runtime here.',
+  'TIP: Championship belts represent skill tiers. Gold = World Class.',
+  'TIP: Hover over menu items for live commentary from JR and Tony.',
+  "TIP: This loading screen is inspired by WWE SmackDown: Here Comes the Pain.",
+  'TIP: The ring ropes are actually THREE.js CatmullRomCurve3 instances.',
+  "TIP: Fun fact: The crowd silhouettes use GPU instancing. They're not real fans.",
+  'TIP: Dark Match projects are the ones you build at 3 AM. We all have them.',
+]
