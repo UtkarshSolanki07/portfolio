@@ -3,6 +3,7 @@
 import { Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Preload } from '@react-three/drei'
+import * as THREE from 'three'
 
 interface SceneWrapperProps {
   children: React.ReactNode
@@ -19,16 +20,18 @@ export default function SceneWrapper({ children }: SceneWrapperProps) {
       }}
     >
       <Canvas
-        shadows
-        dpr={[1, 2]}
+        shadows={{ type: THREE.PCFShadowMap }}
+        dpr={[1, 1.5]}
         gl={{
           antialias: true,
           alpha: false,
           powerPreference: 'high-performance',
+          stencil: false,
+          depth: true,
         }}
         camera={{
           fov: 45,
-          near: 0.1,
+          near: 1,
           far: 200,
           position: [0, 8, 25],
         }}

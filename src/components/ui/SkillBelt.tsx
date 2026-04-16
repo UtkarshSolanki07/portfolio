@@ -1,5 +1,6 @@
 'use client'
 
+import { memo } from 'react'
 import { motion } from 'framer-motion'
 import type { Skill } from '@/data/skills'
 
@@ -10,7 +11,7 @@ interface SkillBeltProps {
   index: number
 }
 
-export default function SkillBelt({ skill, index }: SkillBeltProps) {
+const SkillBelt = ({ skill, index }: SkillBeltProps) => {
   const tierLabels = {
     world: '🏆 WORLD CHAMPION',
     intercontinental: '🥈 INTERCONTINENTAL',
@@ -146,3 +147,5 @@ export default function SkillBelt({ skill, index }: SkillBeltProps) {
     </motion.div>
   )
 }
+
+export default memo(SkillBelt)

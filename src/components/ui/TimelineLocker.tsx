@@ -1,5 +1,6 @@
 'use client'
 
+import { memo } from 'react'
 import { motion } from 'framer-motion'
 import type { Milestone } from '@/data/timeline'
 
@@ -8,7 +9,7 @@ interface TimelineLockerProps {
   index: number
 }
 
-export default function TimelineLocker({ milestone, index }: TimelineLockerProps) {
+const TimelineLocker = ({ milestone, index }: TimelineLockerProps) => {
   const typeStyles = {
     education: { color: 'var(--cyan)', icon: '📚' },
     work: { color: 'var(--gold)', icon: '💼' },
@@ -96,3 +97,5 @@ export default function TimelineLocker({ milestone, index }: TimelineLockerProps
     </motion.div>
   )
 }
+
+export default memo(TimelineLocker)

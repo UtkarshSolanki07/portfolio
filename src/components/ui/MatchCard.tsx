@@ -1,5 +1,6 @@
 'use client'
 
+import { memo } from 'react'
 import { motion } from 'framer-motion'
 import type { Project } from '@/data/projects'
 
@@ -9,7 +10,7 @@ interface MatchCardProps {
   onClick?: () => void
 }
 
-export default function MatchCard({ project, index, onClick }: MatchCardProps) {
+const MatchCard = ({ project, index, onClick }: MatchCardProps) => {
   const tierColors = {
     'main-event': { border: 'var(--gold)', bg: 'rgba(212,175,55,0.06)', glow: 'rgba(212,175,55,0.2)' },
     featured: { border: 'var(--cyan)', bg: 'rgba(0,229,255,0.06)', glow: 'rgba(0,229,255,0.2)' },
@@ -264,3 +265,5 @@ export default function MatchCard({ project, index, onClick }: MatchCardProps) {
     </motion.div>
   )
 }
+
+export default memo(MatchCard)

@@ -3,6 +3,7 @@
 import { useEffect, useCallback, useState, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import { motion, AnimatePresence } from 'framer-motion'
+import IntroPromo from '@/components/ui/IntroPromo'
 import { usePortfolioStore } from '@/lib/store'
 import LoadingScreen from '@/components/layout/LoadingScreen'
 import StatCard from '@/components/ui/StatCard'
@@ -41,13 +42,24 @@ function PortfolioContent() {
     setActiveScene,
     isMuted,
     toggleMute,
+    hasSeenPromo,
+    setHasSeenPromo,
   } = usePortfolioStore()
+
+  const [showPromo, setShowPromo] = useState(false)
 
   const { quip, showQuip } = useCommentaryQuip()
   const { showToast } = useToast()
   const { playSound } = useArenaAudio()
   const [pyroActive, setPyroActive] = useState(false)
   const isNavigating = useRef(false)
+
+  // Trigger promo after loading
+  useEffect(() => {
+    if (!isLoading && !hasSeenPromo) {
+      setShowPromo(true)
+    }
+  }, [isLoading, hasSeenPromo])
 
   // Navigation Handler (Wheel / Touch)
   useEffect(() => {
@@ -137,6 +149,16 @@ function PortfolioContent() {
       />
       <FrenzyDetector />
       <CommentaryQuipDisplay quip={quip} />
+
+      {/* Intro Promo Package */}
+      {showPromo && (
+        <IntroPromo 
+          onComplete={() => {
+            setShowPromo(false)
+            setHasSeenPromo(true)
+          }} 
+        />
+      )}
 
       {/* 3D Arena Background */}
       {!isLoading && (

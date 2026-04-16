@@ -30,6 +30,10 @@ interface PortfolioState {
   // Audio
   isMuted: boolean
   toggleMute: () => void
+
+  // Promo
+  hasSeenPromo: boolean
+  setHasSeenPromo: (seen: boolean) => void
 }
 
 export const usePortfolioStore = create<PortfolioState>((set) => ({
@@ -38,6 +42,10 @@ export const usePortfolioStore = create<PortfolioState>((set) => ({
   loadingProgress: 0,
   setLoading: (loading) => set({ isLoading: loading }),
   setLoadingProgress: (progress) => set({ loadingProgress: progress }),
+
+  // Promo
+  hasSeenPromo: false,
+  setHasSeenPromo: (seen) => set({ hasSeenPromo: seen }),
 
   // Scene
   activeScene: 0,

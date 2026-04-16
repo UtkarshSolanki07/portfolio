@@ -37,7 +37,7 @@ export default function SpotlightRig() {
     angle: Math.PI / 6,
     penumbra: 0.8,
     decay: 2,
-    castShadow: true,
+    castShadow: false, // Turned off for performance (except central light)
   }
 
   return (

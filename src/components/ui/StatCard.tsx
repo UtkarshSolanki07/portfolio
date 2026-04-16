@@ -55,7 +55,7 @@ export default function StatCard() {
           {/* Try to load character photo, fallback to hex placeholder */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/utkarsh-action.png"
+            src="/images/utkarsh-action.png"
             alt="Utkarsh Solanki"
             style={{
               width: '100%',

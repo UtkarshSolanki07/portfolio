@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Barlow_Condensed, Rajdhani, Share_Tech_Mono } from "next/font/google";
+import { Barlow_Condensed, Rajdhani, Share_Tech_Mono, Bebas_Neue } from "next/font/google";
 import "./globals.css";
 
 const barlowCondensed = Barlow_Condensed({
@@ -18,6 +18,13 @@ const rajdhani = Rajdhani({
 
 const shareTechMono = Share_Tech_Mono({
   variable: "--font-share-tech",
+  subsets: ["latin"],
+  weight: "400",
+  display: "swap",
+});
+
+const bebasNeue = Bebas_Neue({
+  variable: "--font-bebas",
   subsets: ["latin"],
   weight: "400",
   display: "swap",
@@ -53,7 +60,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${barlowCondensed.variable} ${rajdhani.variable} ${shareTechMono.variable}`}
+        className={`${barlowCondensed.variable} ${rajdhani.variable} ${shareTechMono.variable} ${bebasNeue.variable}`}
         style={{
           fontFamily: "var(--font-rajdhani, 'Rajdhani', sans-serif)",
         }}

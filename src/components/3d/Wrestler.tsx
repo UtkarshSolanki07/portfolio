@@ -19,8 +19,9 @@ export default function Wrestler({
     position = [0, 0, 0],
 }: WrestlerProps) {
     const meshRef = useRef<THREE.Group>(null)
-    const mixerRef = useRef<THREE.AnimationMixer | null>(null)
-    const clockRef = useRef<THREE.Clock>(new THREE.Clock())
+    const chestRef = useRef<THREE.Object3D | null>(null)
+    const leftArmRef = useRef<THREE.Object3D | null>(null)
+    const rightArmRef = useRef<THREE.Object3D | null>(null)
 
     useFrame((state) => {
         const delta = state.clock.getDelta()
@@ -28,37 +29,28 @@ export default function Wrestler({
 
         if (!meshRef.current) return
 
+        // Initialize refs if needed
+        if (!chestRef.current) chestRef.current = meshRef.current.getObjectByName('chest') || null
+        if (!leftArmRef.current) leftArmRef.current = meshRef.current.getObjectByName('leftUpperArm') || null
+        if (!rightArmRef.current) rightArmRef.current = meshRef.current.getObjectByName('rightUpperArm') || null
+
         // Calculate idle animations
         const breathing = Math.sin(elapsed * 0.8) * 0.02
-        const sway = Math.sin(elapsed * 0.3) * 0.5 * (Math.PI / 180) // Convert to radians
-        const leftArmRotation = Math.sin(elapsed * 0.6) * 0.3
-        const rightArmRotation = Math.sin(elapsed * 0.6 + Math.PI) * 0.3
+        const sway = Math.sin(elapsed * 0.3) * 0.5 * (Math.PI / 180)
+        const armRotation = Math.sin(elapsed * 0.6) * 0.3
 
-        // Apply transformations to body parts
-        const group = meshRef.current
-        if (!group) return
-
-        // Breathing (scale chest slightly)
-        const chest = group.getObjectByName('chest')
-        if (chest) {
-            chest.scale.set(
-                1 + breathing,
-                1 + breathing * 0.5,
-                1 + breathing
-            )
+        // Apply transformations
+        if (chestRef.current) {
+            chestRef.current.scale.set(1 + breathing, 1 + breathing * 0.5, 1 + breathing)
         }
 
-        // Sway whole body
-        group.rotation.y = rotation[1] + sway
+        meshRef.current.rotation.y = rotation[1] + sway
 
-        // Arm movements
-        const leftArm = group.getObjectByName('leftUpperArm')
-        const rightArm = group.getObjectByName('rightUpperArm')
-        if (leftArm) {
-            leftArm.rotation.z = leftArmRotation
+        if (leftArmRef.current) {
+            leftArmRef.current.rotation.z = armRotation
         }
-        if (rightArm) {
-            rightArm.rotation.z = rightArmRotation
+        if (rightArmRef.current) {
+            rightArmRef.current.rotation.z = -armRotation
         }
     })
 

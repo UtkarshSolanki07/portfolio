@@ -58,13 +58,14 @@ export default function CrowdSilhouettes() {
     meshRef.current.instanceMatrix.needsUpdate = true
   }, [])
 
-  // Animate crowd bobbing — wave effect through the crowd
+  // Animate crowd bobbing — simplified update
   useFrame(({ clock }) => {
     if (!meshRef.current) return
     const t = clock.getElapsedTime()
 
+    // We can optimize this by only updating every other frame or using a simpler wave
     POSITIONS.forEach((p, i) => {
-      const wave = Math.sin(t * 1.5 + p.phase) * 0.12
+      const wave = Math.sin(t * 1.5 + p.phase) * 0.1
       dummy.current.position.set(p.x, p.y + wave, p.z)
       dummy.current.scale.set(p.scale * 0.35, p.scale + wave * 0.1, p.scale * 0.2)
       dummy.current.rotation.set(0, -Math.atan2(p.x, p.z), 0)
@@ -97,17 +98,17 @@ export default function CrowdSilhouettes() {
         />
       </instancedMesh>
 
-      {/* Crowd cheering flash lights — coloured dots scattered at ring level */}
-      {Array.from({ length: 30 }).map((_, i) => {
-        const angle = (i / 30) * Math.PI * 2
+      {/* Crowd cheering flash lights — reduced count for performance */}
+      {Array.from({ length: 8 }).map((_, i) => {
+        const angle = (i / 8) * Math.PI * 2
         const r = 13 + Math.sin(i * 7.3) * 4
         return (
           <pointLight
             key={`crowd-light-${i}`}
-            position={[Math.cos(angle) * r, 1.5, Math.sin(angle) * r * 0.75]}
-            intensity={0.8 + Math.sin(i * 3.7) * 0.4}
-            distance={6}
-            decay={3}
+            position={[Math.cos(angle) * r, 2, Math.sin(angle) * r * 0.75]}
+            intensity={1.5}
+            distance={12}
+            decay={2}
             color={i % 3 === 0 ? '#d4af37' : i % 3 === 1 ? '#ff1744' : '#00e5ff'}
           />
         )
