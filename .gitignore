@@ -39,3 +39,19 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# AI Agent Skills
+.agents/
+skills-lock.json
+
+# IDE / Agent Meta
+.claude/
+.pi/
+.windsurf/
+
+# HyperFrames
+intro-promo/render/
+intro-promo/meta.json
+
+# Utility Scripts
+sync-promo.ps1

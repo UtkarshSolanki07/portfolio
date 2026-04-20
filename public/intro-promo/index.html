@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Utkarsh Solanki — The Main Event</title>
+  <!-- Google Fonts for browser preview; HyperFrames compiler embeds on render -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <style>
+    /* ─────────────────────────────────────────────
+       DESIGN TOKENS — The Main Event
+       Bg: #0a0a0f  Gold: #d4af37  Red: #ff1744  Off-white: #f0ede0
+    ───────────────────────────────────────────── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      background: #0a0a0f;
+      font-family: "Bebas Neue", "Impact", sans-serif;
+    }
+
+    /* ─── Scene base ─── */
+    .scene {
+      position: absolute;
+      top: 0; left: 0;
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      background: #0a0a0f;
+    }
+
+    /* Scene 1 visible; all others hidden until transitioned in */
+    #s1 { z-index: 1; }
+    #s2 { z-index: 2;  opacity: 0; }
+    #s3 { z-index: 3;  opacity: 0; }
+    #s4 { z-index: 4;  opacity: 0; }
+    #s5 { z-index: 5;  opacity: 0; }
+    #s6 { z-index: 6;  opacity: 0; }
+    #s7 { z-index: 7;  opacity: 0; }
+
+    /* ─── Global overlays (always above scenes) ─── */
+    #scanlines, #flash, #glitch-r, #glitch-g, #glitch-b {
+      position: absolute;
+      top: 0; left: 0;
+      width: 1920px; height: 1080px;
+      pointer-events: none;
+    }
+    #scanlines {
+      z-index: 50;
+      background-image: repeating-linear-gradient(
+        0deg,
+        rgba(0,0,0,0) 0px, rgba(0,0,0,0) 2px,
+        rgba(0,0,0,0.16) 2px, rgba(0,0,0,0.16) 4px
+      );
+    }
+    /* Flash: warm gold wash instead of harsh white */
+    #flash        { z-index: 200; background: rgba(212,175,55,0.85); opacity: 0; }
+    /* Glitch overlays: muted warm tones at low opacity for subtle distortion */
+    #glitch-r     { z-index: 100; background: rgba(212,175,55, 0.12);   opacity: 0; }
+    #glitch-g     { z-index: 100; background: rgba(180,160,100, 0.08);  opacity: 0; }
+    #glitch-b     { z-index: 100; background: rgba(140,120,80, 0.10);   opacity: 0; }
+
+    /* ─── Content container — fills scene, padding positions content ─── */
+    .sc {
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column;
+      justify-content: center;
+      padding: 120px 160px;
+      gap: 28px;
+      box-sizing: border-box;
+      position: relative; z-index: 2;
+    }
+    .sc-center { align-items: center; text-align: center; }
+
+    /* ─── Typography ─── */
+    .lbl {
+      font-family: "Bebas Neue", "Impact", sans-serif;
+      font-size: 26px;
+      letter-spacing: 0.5em;
+      color: #d4af37;
+      text-transform: uppercase;
+    }
+    .lbl-red  { color: #ff1744; }
+    .lbl-dim  { color: rgba(212,175,55,0.55); }
+    .h1 {
+      font-family: "Bebas Neue", "Impact", sans-serif;
+      font-size: 220px;
+      line-height: 0.85;
+      color: #f0ede0;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .h1-gold {
+      color: #d4af37;
+      text-shadow: 0 0 60px rgba(212,175,55,0.5), 0 0 140px rgba(212,175,55,0.25);
+    }
+    .h1-red { color: #ff1744; }
+    .sub {
+      font-family: "Bebas Neue", "Impact", sans-serif;
+      font-size: 48px;
+      letter-spacing: 0.3em;
+      color: rgba(240,237,224,0.4);
+      text-transform: uppercase;
+    }
+
+    /* ════════════════════════════════════════
+       SCENE 1 — UTKARSH SOLANKI (0–1s)
+    ════════════════════════════════════════ */
+    #s1-warning {
+      font-family: "Bebas Neue", "Impact", sans-serif;
+      font-size: 22px;
+      letter-spacing: 0.7em;
+      color: #ff1744;
+      text-transform: uppercase;
+    }
+    #s1-name {
+      font-family: "Bebas Neue", "Impact", sans-serif;
+      font-size: 230px;
+      line-height: 0.82;
+      color: #d4af37;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      text-shadow: 0 0 60px rgba(212,175,55,0.5), 0 0 140px rgba(212,175,55,0.25);
+    }
+    /* Decorative: gold base stripe */
+    #s1-bar { position: absolute; bottom: 0; left: 0; width: 100%; height: 8px;  background: #d4af37; }
+    #s1-bar2{ position: absolute; bottom: 8px; left: 0; width: 100%; height: 3px; background: #ff1744; }
+
+    /* ════════════════════════════════════════
+       SCENE 2 — FULL STACK ENGINEER (1–3s)
+    ════════════════════════════════════════ */
+    #s2-codebg {
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 150%;         /* oversized for scroll */
+      font-family: "Courier New", monospace;
+      font-size: 18px; line-height: 1.7;
+      color: rgba(212,175,55,0.055);
+      white-space: pre;
+      padding: 40px;
+      pointer-events: none;
+    }
+    #s2-glow {
+      position: absolute; top: 50%; left: -100px;
+      transform: translateY(-50%);
+      width: 700px; height: 700px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(212,175,55,0.07) 0%, rgba(10,10,15,0) 70%);
+    }
+    #s2-title { font-size: 170px; line-height: 0.88; color: #f0ede0; letter-spacing: 0.03em; text-transform: uppercase; }
+    #s2-sub { color: rgba(212,175,55,0.55); font-size: 44px; letter-spacing: 0.35em; }
+
+    /* ════════════════════════════════════════
+       SCENE 3 — THE MAIN EVENT (3–5s)
+    ════════════════════════════════════════ */
+    #s3-spot {
+      position: absolute; top: -300px; left: 50%;
+      transform: translateX(-50%);
+      width: 1400px; height: 1500px;
+      background: radial-gradient(ellipse at 50% 0%, rgba(212,175,55,0.13) 0%, rgba(10,10,15,0) 65%);
+    }
+    /* Perspective ring ropes */
+    #s3-ropes {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 360px; overflow: hidden;
+    }
+    #s3-ropes::before {
+      content: "";
+      position: absolute; bottom: 100px; left: 50%;
+      transform: translateX(-50%);
+      width: 1700px; height: 2px;
+      background: linear-gradient(90deg, rgba(212,175,55,0) 0%, rgba(212,175,55,0.25) 20%, rgba(212,175,55,0.25) 80%, rgba(212,175,55,0) 100%);
+    }
+    #s3-ropes::after {
+      content: "";
+      position: absolute; bottom: 40px; left: 50%;
+      transform: translateX(-50%);
+      width: 1700px; height: 1px;
+      background: linear-gradient(90deg, rgba(212,175,55,0) 0%, rgba(212,175,55,0.15) 20%, rgba(212,175,55,0.15) 80%, rgba(212,175,55,0) 100%);
+    }
+    #s3-title { font-size: 260px; line-height: 0.82; color: #f0ede0; letter-spacing: 0.07em; text-transform: uppercase; }
+    #s3-sub { color: rgba(240,237,224,0.35); letter-spacing: 0.4em; }
+
+    /* ════════════════════════════════════════
+       SCENE 4 — BUILT TO LAST (5–7s)
+    ════════════════════════════════════════ */
+    #s4-glowR {
+      position: absolute; top: 50%; right: -100px;
+      transform: translateY(-50%);
+      width: 700px; height: 700px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,23,68,0.07) 0%, rgba(10,10,15,0) 70%);
+    }
+    #s4-title { font-size: 160px; line-height: 0.9; color: #f0ede0; letter-spacing: 0.04em; text-transform: uppercase; }
+    #s4-stack { display: flex; gap: 40px; flex-wrap: wrap; align-items: center; }
+    .badge {
+      font-family: "Bebas Neue", "Impact", sans-serif;
+      font-size: 38px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: #d4af37;
+      border: 2px solid rgba(212,175,55,0.45);
+      padding: 12px 36px;
+    }
+
+    /* ════════════════════════════════════════
+       SCENE 5 — 99 OVR ATTITUDE (7–9s)
+    ════════════════════════════════════════ */
+    #s5-num {
+      font-size: 340px; line-height: 0.78;
+      color: #ff1744;
+      letter-spacing: -0.02em;
+    }
+    #s5-ovr { font-size: 80px; letter-spacing: 0.12em; color: #d4af37; }
+    /* Stat bars — positioned right side */
+    #s5-bars {
+      position: absolute; right: 140px; top: 50%;
+      display: flex; flex-direction: column; gap: 20px;
+    }
+    .bar-row { display: flex; align-items: center; gap: 18px; }
+    .bar-name {
+      font-family: "Bebas Neue", "Impact", sans-serif;
+      font-size: 26px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: rgba(240,237,224,0.38);
+      width: 230px; text-align: right;
+    }
+    .bar-track { width: 380px; height: 5px; background: rgba(255,255,255,0.07); }
+    .bar-fill  { height: 100%; background: #d4af37; width: 0%; }
+    .bar-val {
+      font-family: "Bebas Neue", "Impact", sans-serif;
+      font-size: 26px; letter-spacing: 0.1em;
+      color: #d4af37; width: 52px;
+    }
+
+    /* ════════════════════════════════════════
+       SCENE 6 — VERSATILE. RELENTLESS. (9–11s)
+    ════════════════════════════════════════ */
+    #s6-title {
+      font-size: 170px; line-height: 0.85;
+      color: #d4af37; letter-spacing: 0.04em; text-transform: uppercase;
+    }
+    #s6-dot { color: #ff1744; }
+    #s6-sub { font-size: 52px; letter-spacing: 0.35em; color: rgba(240,237,224,0.35); text-transform: uppercase; }
+    #s6-belts { display: flex; gap: 30px; flex-wrap: wrap; }
+    .belt {
+      font-family: "Bebas Neue", "Impact", sans-serif;
+      font-size: 34px; letter-spacing: 0.15em; text-transform: uppercase;
+      color: #0a0a0f; background: #d4af37;
+      padding: 10px 32px;
+      clip-path: polygon(14px 0%, 100% 0%, calc(100% - 14px) 100%, 0% 100%);
+    }
+
+    /* ════════════════════════════════════════
+       SCENE 7 — ENTER THE ARENA (11–12s)
+    ════════════════════════════════════════ */
+    #s7-glow {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 1300px; height: 1300px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(212,175,55,0.13) 0%, rgba(10,10,15,0) 65%);
+    }
+    #s7-monogram {
+      font-family: "Bebas Neue", "Impact", sans-serif;
+      font-size: 72px; letter-spacing: 0.25em;
+      color: rgba(212,175,55,0.12);
+      position: absolute; top: 56px; right: 120px;
+    }
+    #s7-eyebrow {
+      font-family: "Courier New", monospace;
+      font-size: 22px; letter-spacing: 0.55em; text-transform: uppercase;
+      color: rgba(212,175,55,0.45);
+    }
+    #s7-cta {
+      font-size: 230px; line-height: 0.82;
+      color: #d4af37; letter-spacing: 0.07em; text-transform: uppercase;
+      text-shadow: 0 0 80px rgba(212,175,55,0.5), 0 0 200px rgba(212,175,55,0.2);
+    }
+    #s7-sub { font-size: 34px; letter-spacing: 0.6em; color: rgba(240,237,224,0.28); text-transform: uppercase; }
+  </style>
+</head>
+<body>
+  <!--
+    HyperFrames composition — "intro-promo"
+    Duration: 12s | 7 scenes | CSS+GSAP | No video files
+    DESIGN: The Main Event (see DESIGN.md)
+  -->
+  <div
+    id="root"
+    data-composition-id="intro-promo"
+    data-width="1920"
+    data-height="1080"
+    data-start="0"
+    data-duration="12"
+  >
+    <!-- ── Persistent overlays (always rendered above scenes) ── -->
+    <div id="scanlines"></div>
+    <div id="flash"></div>
+    <div id="glitch-r"></div>
+    <div id="glitch-g"></div>
+    <div id="glitch-b"></div>
+
+    <!-- ════════════════════════════════════════
+         SCENE 1 — UTKARSH SOLANKI (0–1s)
+    ════════════════════════════════════════ -->
+    <div id="s1" class="scene">
+      <div id="s1-bar"></div>
+      <div id="s1-bar2"></div>
+      <div class="sc">
+        <div id="s1-warning">⚡ Warning — High Attitude Content</div>
+        <div id="s1-name">Utkarsh Solanki</div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════
+         SCENE 2 — FULL STACK ENGINEER (1–3s)
+    ════════════════════════════════════════ -->
+    <div id="s2" class="scene">
+      <div id="s2-codebg">const engineer = {
+  name:    'Utkarsh Solanki',
+  stack:   ['Next.js', 'React', 'Three.js', 'Node.js'],
+  mobile:  'React Native',
+  rating:   99,
+  mode:    'MAIN EVENT',
+  status:  'UNDEFEATED',
+  shipped:  true,
+};
+
+async function build(vision) {
+  const result = await ship(vision);
+  return result.status === 'LEGENDARY';
+}
+
+export default engineer;</div>
+      <div id="s2-glow"></div>
+      <div class="sc">
+        <div id="s2-lbl" class="lbl">System Initialized</div>
+        <div id="s2-title">Full Stack Engineer</div>
+        <div id="s2-sub">&gt;&gt; Loading Modules...</div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════
+         SCENE 3 — THE MAIN EVENT (3–5s)
+    ════════════════════════════════════════ -->
+    <div id="s3" class="scene">
+      <div id="s3-spot"></div>
+      <div id="s3-ropes"></div>
+      <div class="sc sc-center">
+        <div id="s3-lbl" class="lbl">Tonight's Main Event</div>
+        <div id="s3-title">The Main Event</div>
+        <div id="s3-sub" class="sub">Now Entering the Arena</div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════
+         SCENE 4 — BUILT TO LAST (5–7s)
+    ════════════════════════════════════════ -->
+    <div id="s4" class="scene">
+      <div id="s4-glowR"></div>
+      <div class="sc">
+        <div id="s4-lbl" class="lbl lbl-red">Built to Last</div>
+        <div id="s4-title">Real Projects. Real Results.</div>
+        <div id="s4-stack">
+          <span class="badge" id="b-nextjs">Next.js</span>
+          <span class="badge" id="b-rn">React Native</span>
+          <span class="badge" id="b-three">Three.js</span>
+          <span class="badge" id="b-node">Node.js</span>
+          <span class="badge" id="b-ts">TypeScript</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════
+         SCENE 5 — 99 OVR ATTITUDE (7–9s)
+    ════════════════════════════════════════ -->
+    <div id="s5" class="scene">
+      <div class="sc">
+        <div id="s5-lbl" class="lbl lbl-dim">Career Rating</div>
+        <div id="s5-num">99</div>
+        <div id="s5-ovr">OVR Attitude</div>
+      </div>
+      <div id="s5-bars">
+        <div class="bar-row">
+          <span class="bar-name">MERN Stack</span>
+          <div class="bar-track"><div class="bar-fill" id="bf1"></div></div>
+          <span class="bar-val">92</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-name">React Native</span>
+          <div class="bar-track"><div class="bar-fill" id="bf2"></div></div>
+          <span class="bar-val">88</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-name">TypeScript</span>
+          <div class="bar-track"><div class="bar-fill" id="bf3"></div></div>
+          <span class="bar-val">82</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-name">Three.js</span>
+          <div class="bar-track"><div class="bar-fill" id="bf4"></div></div>
+          <span class="bar-val">79</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-name">AI Tooling</span>
+          <div class="bar-track"><div class="bar-fill" id="bf5"></div></div>
+          <span class="bar-val">75</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════
+         SCENE 6 — VERSATILE. RELENTLESS. (9–11s)
+    ════════════════════════════════════════ -->
+    <div id="s6" class="scene">
+      <div class="sc">
+        <div id="s6-lbl" class="lbl lbl-dim">Championship Record</div>
+        <div id="s6-title">Versatile<span id="s6-dot">.</span> Relentless<span class="s6-dot2" style="color:#ff1744">.</span></div>
+        <div id="s6-sub">Unbeatable Stack</div>
+        <div id="s6-belts">
+          <span class="belt" id="bl-fs">Full Stack</span>
+          <span class="belt" id="bl-mb">Mobile Dev</span>
+          <span class="belt" id="bl-3d">3D Web</span>
+          <span class="belt" id="bl-ai">AI Tools</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════
+         SCENE 7 — ENTER THE ARENA (11–12s)
+    ════════════════════════════════════════ -->
+    <div id="s7" class="scene">
+      <div id="s7-glow"></div>
+      <div id="s7-monogram">US</div>
+      <div class="sc sc-center">
+        <div id="s7-eyebrow">Season 2025 — Portfolio</div>
+        <div id="s7-cta">Enter the Arena</div>
+        <div id="s7-sub">The Ring is Set</div>
+      </div>
+    </div>
+
+  </div><!-- /#root -->
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js" crossorigin="anonymous"></script>
+  <script>
+    window.__timelines = window.__timelines || {};
+
+    // ─── Seeded PRNG (mulberry32) — no Math.random() per HyperFrames rules ───
+    function mulberry32(seed) {
+      return function() {
+        seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+        var t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+        t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+      };
+    }
+
+    var tl = gsap.timeline({ paused: true });
+
+    /* ════════════════════════════════════════════════════════════
+       S1 — UTKARSH SOLANKI  |  0.0 → 1.0s
+    ════════════════════════════════════════════════════════════ */
+    // Opening flash — white slam that burns to reveal the scene
+    // Opening flash — warm gold wash, not searing white
+    tl.set("#flash", { opacity: 0.5 }, 0);
+    tl.to("#flash", { opacity: 0, duration: 0.55, ease: "power2.out", overwrite: "auto" }, 0.08);
+
+    // Base stripe grows from left
+    tl.from("#s1-bar",  { scaleX: 0, transformOrigin: "left center", duration: 0.45, ease: "power4.out" }, 0.1);
+    tl.from("#s1-bar2", { scaleX: 0, transformOrigin: "left center", duration: 0.35, ease: "expo.out"   }, 0.2);
+
+    // Warning label drops in
+    tl.from("#s1-warning", { y: -28, opacity: 0, duration: 0.22, ease: "power4.out" }, 0.18);
+
+    // Name SLAMS from below (hero entrance)
+    tl.from("#s1-name", { y: 90, opacity: 0, scale: 1.06, duration: 0.32, ease: "back.out(1.5)" }, 0.28);
+
+    // Subtle glow pulse on the name — no harsh RGB split
+    tl.to("#s1-name", {
+      textShadow: "0 0 90px rgba(212,175,55,0.7), 0 0 200px rgba(212,175,55,0.35)",
+      duration: 0.25, ease: "sine.inOut"
+    }, 0.6);
+    tl.to("#s1-name", {
+      textShadow: "0 0 60px rgba(212,175,55,0.5), 0 0 140px rgba(212,175,55,0.25)",
+      duration: 0.2, ease: "sine.inOut"
+    }, 0.85);
+
+    /* ════════════════════════════════════════════════════════════
+       TRANSITION 1→2  |  T=1.0s  |  Glitch (0.15s)
+    ════════════════════════════════════════════════════════════ */
+    var T1 = 1.0;
+    // Blur crossfade: gentle transition
+    tl.to("#s1", { filter: "blur(8px)", opacity: 0, duration: 0.4, ease: "power2.inOut" }, T1);
+    tl.set("#s2", { opacity: 1, filter: "blur(8px)" }, T1);
+    tl.to("#s2", { filter: "blur(0px)", duration: 0.35, ease: "power2.out" }, T1 + 0.1);
+
+    /* ════════════════════════════════════════════════════════════
+       S2 — FULL STACK ENGINEER  |  1.0 → 3.0s
+    ════════════════════════════════════════════════════════════ */
+    tl.from("#s2-codebg", { opacity: 0, duration: 0.5,  ease: "power2.out" }, T1 + 0.15);
+    // Code scrolls upward continuously over the 2s window
+    tl.to("#s2-codebg",   { y: "-30%", duration: 2.2,  ease: "none"       }, T1 + 0.1);
+    tl.from("#s2-glow",   { scale: 0.4, opacity: 0, duration: 0.7, ease: "sine.out" }, T1 + 0.12);
+
+    tl.from("#s2-lbl",    { x: -40, opacity: 0, duration: 0.28, ease: "expo.out"     }, T1 + 0.22);
+    tl.from("#s2-title",  { y: 65,  opacity: 0, scale: 0.94, duration: 0.48, ease: "back.out(1.4)" }, T1 + 0.32);
+    tl.from("#s2-sub",    { x: 45,  opacity: 0, duration: 0.32, ease: "power3.out"  }, T1 + 0.55);
+
+    /* ════════════════════════════════════════════════════════════
+       TRANSITION 2→3  |  T=3.0s  |  Overexposure flash
+    ════════════════════════════════════════════════════════════ */
+    var T2 = 3.0;
+    // Soft gold flash — not blinding
+    tl.to("#flash", { opacity: 0.45, duration: 0.18, ease: "power3.in", overwrite: "auto" }, T2 - 0.18);
+    tl.set("#s3",    { opacity: 1 },                                        T2);
+    tl.set("#s2",    { opacity: 0 },                                        T2);
+    tl.to("#flash",  { opacity: 0, duration: 0.45, ease: "power2.out", overwrite: "auto" },    T2);
+
+    /* ════════════════════════════════════════════════════════════
+       S3 — THE MAIN EVENT  |  3.0 → 5.0s
+    ════════════════════════════════════════════════════════════ */
+    tl.from("#s3-spot",   { scale: 0.25, opacity: 0, duration: 0.75, ease: "power2.out"  }, T2 + 0.1);
+    tl.from("#s3-ropes",  { opacity: 0, y: 50,       duration: 0.6,  ease: "power2.out"  }, T2 + 0.18);
+    tl.from("#s3-lbl",    { y: -22, opacity: 0,      duration: 0.27, ease: "power4.out"  }, T2 + 0.22);
+    tl.from("#s3-title",  { scale: 1.28, opacity: 0, duration: 0.52, ease: "expo.out"    }, T2 + 0.3);
+    tl.from("#s3-sub",    { y: 35, opacity: 0,       duration: 0.38, ease: "sine.out"    }, T2 + 0.62);
+
+    /* ════════════════════════════════════════════════════════════
+       TRANSITION 3→4  |  T=5.0s  |  Glitch
+    ════════════════════════════════════════════════════════════ */
+    var T3 = 5.0;
+    // Gentle glitch: reduced offsets, subtle warm overlays
+    tl.set("#s4",       { opacity: 1 },             T3);
+    tl.set("#glitch-r", { opacity: 0.6, x: -14, y:  3 }, T3);
+    tl.to("#s3", { x: 10,  duration: 0.06, ease: "none", overwrite: "auto" }, T3);
+    tl.to("#s3", { x: -6,  duration: 0.06, ease: "none", overwrite: "auto" }, T3 + 0.06);
+    tl.set("#s3", { opacity: 0, x: 0 }, T3 + 0.14);
+    tl.to("#glitch-r", { opacity: 0, x: 0, duration: 0.2, ease: "power2.out", overwrite: "auto" }, T3 + 0.14);
+
+    /* ════════════════════════════════════════════════════════════
+       S4 — BUILT TO LAST  |  5.0 → 7.0s
+    ════════════════════════════════════════════════════════════ */
+    tl.from("#s4-lbl",   { x: -35, opacity: 0, duration: 0.26, ease: "power4.out"   }, T3 + 0.18);
+    tl.from("#s4-title", { x: -65, opacity: 0, duration: 0.42, ease: "expo.out"     }, T3 + 0.26);
+    tl.from("#s4-glowR", { scale: 0, opacity: 0, duration: 0.8, ease: "power2.out"  }, T3 + 0.1);
+    // Badge stagger — each slams up individually
+    var badgeIDs = ["#b-nextjs","#b-rn","#b-three","#b-node","#b-ts"];
+    badgeIDs.forEach(function(id, i) {
+      tl.from(id, { y: 44, opacity: 0, scale: 0.82, duration: 0.3, ease: "back.out(1.7)" }, T3 + 0.38 + i * 0.1);
+    });
+
+    /* ════════════════════════════════════════════════════════════
+       TRANSITION 4→5  |  T=7.0s  |  Flash
+    ════════════════════════════════════════════════════════════ */
+    var T4 = 7.0;
+    // Soft gold wash transition
+    tl.to("#flash", { opacity: 0.35, duration: 0.14, ease: "power3.in", overwrite: "auto" }, T4 - 0.14);
+    tl.set("#s5", { opacity: 1 }, T4);
+    tl.set("#s4", { opacity: 0 }, T4);
+    tl.to("#flash", { opacity: 0, duration: 0.35, ease: "power2.out", overwrite: "auto" }, T4);
+
+    /* ════════════════════════════════════════════════════════════
+       S5 — 99 OVR ATTITUDE  |  7.0 → 9.0s
+    ════════════════════════════════════════════════════════════ */
+    tl.from("#s5-lbl", { x: -32, opacity: 0, duration: 0.26, ease: "power3.out"    }, T4 + 0.16);
+    tl.from("#s5-num", { scale: 1.45, opacity: 0, duration: 0.42, ease: "expo.out" }, T4 + 0.22);
+    tl.from("#s5-ovr", { y: 30, opacity: 0,  duration: 0.3,  ease: "back.out(1.3)" }, T4 + 0.42);
+    tl.fromTo("#s5-bars", { x: 85, opacity: 0, yPercent: -50 }, { x: 0, opacity: 1, yPercent: -50, duration: 0.38, ease: "power3.out" }, T4 + 0.32);
+    // Bar fills — each animates to its value width
+    tl.to("#bf1", { width: "92%", duration: 0.62, ease: "power2.out" }, T4 + 0.52);
+    tl.to("#bf2", { width: "88%", duration: 0.62, ease: "power2.out" }, T4 + 0.62);
+    tl.to("#bf3", { width: "82%", duration: 0.62, ease: "power2.out" }, T4 + 0.72);
+    tl.to("#bf4", { width: "79%", duration: 0.62, ease: "power2.out" }, T4 + 0.82);
+    tl.to("#bf5", { width: "75%", duration: 0.62, ease: "power2.out" }, T4 + 0.92);
+
+    /* ════════════════════════════════════════════════════════════
+       TRANSITION 5→6  |  T=9.0s  |  Glitch
+    ════════════════════════════════════════════════════════════ */
+    var T5 = 9.0;
+    // Blur crossfade — smooth and cinematic
+    tl.to("#s5", { filter: "blur(6px)", opacity: 0, duration: 0.38, ease: "power2.inOut" }, T5);
+    tl.set("#s6", { opacity: 1, filter: "blur(6px)" }, T5);
+    tl.to("#s6", { filter: "blur(0px)", duration: 0.3, ease: "power2.out" }, T5 + 0.1);
+
+    /* ════════════════════════════════════════════════════════════
+       S6 — VERSATILE. RELENTLESS.  |  9.0 → 11.0s
+    ════════════════════════════════════════════════════════════ */
+    tl.from("#s6-lbl",   { x: -35, opacity: 0, duration: 0.26, ease: "power4.out"   }, T5 + 0.2);
+    tl.from("#s6-title", { y: 55, opacity: 0, duration: 0.46,  ease: "back.out(1.3)" }, T5 + 0.3);
+    tl.from("#s6-sub",   { x: 48, opacity: 0, duration: 0.32,  ease: "expo.out"     }, T5 + 0.52);
+    // Belt stagger
+    var beltIDs = ["#bl-fs","#bl-mb","#bl-3d","#bl-ai"];
+    beltIDs.forEach(function(id, i) {
+      tl.from(id, { y: 32, scaleX: 0.55, opacity: 0, duration: 0.36, ease: "back.out(1.9)" }, T5 + 0.58 + i * 0.12);
+    });
+
+    /* ════════════════════════════════════════════════════════════
+       TRANSITION 6→7  |  T=11.0s  |  Overexposure (hero reveal)
+    ════════════════════════════════════════════════════════════ */
+    var T6 = 11.0;
+    // Final reveal — soft gold bloom, the biggest one
+    tl.to("#flash", { opacity: 0.55, duration: 0.2, ease: "power3.in", overwrite: "auto" }, T6 - 0.2);
+    tl.set("#s7",   { opacity: 1 },                                     T6);
+    tl.set("#s6",   { opacity: 0 },                                     T6);
+    tl.to("#flash", { opacity: 0, duration: 0.5, ease: "power2.out", overwrite: "auto" }, T6);
+
+    /* ════════════════════════════════════════════════════════════
+       S7 — ENTER THE ARENA  |  11.0 → 12.0s
+    ════════════════════════════════════════════════════════════ */
+    tl.from("#s7-glow",     { scale: 0.2, opacity: 0, duration: 0.6, ease: "power2.out"  }, T6 + 0.2);
+    tl.from("#s7-monogram", { opacity: 0, scale: 2.2, duration: 0.5, ease: "power3.out"  }, T6 + 0.22);
+    tl.from("#s7-eyebrow",  { y: -22, opacity: 0,     duration: 0.3, ease: "expo.out"    }, T6 + 0.28);
+    tl.from("#s7-cta",      { scale: 0.76, opacity: 0, duration: 0.52, ease: "expo.out"  }, T6 + 0.34);
+    tl.from("#s7-sub",      { y: 24, opacity: 0,      duration: 0.34, ease: "sine.out"   }, T6 + 0.58);
+
+    // FINAL scene exit — fade to black. Only allowed on last scene.
+    tl.to("#s7", { opacity: 0, duration: 0.45, ease: "power2.in" }, 11.55);
+
+    // Register with HyperFrames — the player drives playback when rendering
+    window.__timelines["intro-promo"] = tl;
+
+    // ── Standalone / iframe auto-play (not running under HF render engine) ──
+    if (typeof window.__hyperframesPlayer === "undefined") {
+      tl.play();
+      // Notify parent window (IntroPromo.tsx) that the promo has finished
+      tl.eventCallback("onComplete", function() {
+        try { window.parent.postMessage({ type: "PROMO_COMPLETE" }, "*"); } catch(e) {}
+      });
+    }
+  </script>
+</body>
+</html>

@@ -46,7 +46,7 @@ function PortfolioContent() {
     setHasSeenPromo,
   } = usePortfolioStore()
 
-  const [showPromo, setShowPromo] = useState(false)
+  const shouldShowPromo = !isLoading && !hasSeenPromo
 
   const { quip, showQuip } = useCommentaryQuip()
   const { showToast } = useToast()
@@ -54,12 +54,6 @@ function PortfolioContent() {
   const [pyroActive, setPyroActive] = useState(false)
   const isNavigating = useRef(false)
 
-  // Trigger promo after loading
-  useEffect(() => {
-    if (!isLoading && !hasSeenPromo) {
-      setShowPromo(true)
-    }
-  }, [isLoading, hasSeenPromo])
 
   // Navigation Handler (Wheel / Touch)
   useEffect(() => {
@@ -151,10 +145,9 @@ function PortfolioContent() {
       <CommentaryQuipDisplay quip={quip} />
 
       {/* Intro Promo Package */}
-      {showPromo && (
+      {shouldShowPromo && (
         <IntroPromo 
           onComplete={() => {
-            setShowPromo(false)
             setHasSeenPromo(true)
           }} 
         />
