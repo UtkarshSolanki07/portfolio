@@ -183,7 +183,7 @@ function PortfolioContent() {
               zIndex: 100,
               display: 'flex',
               alignItems: 'center',
-              padding: '0 8px',
+              padding: '0 4px',
             }}
           >
             <MenuPanel
@@ -195,8 +195,8 @@ function PortfolioContent() {
           <div
             style={{
               position: 'fixed',
-              top: '20px',
-              right: '20px',
+              top: '32px',
+              right: '32px',
               zIndex: 100,
             }}
           >
@@ -246,7 +246,7 @@ function PortfolioContent() {
                   flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  padding: '2rem',
+                  padding: 'clamp(1rem, 5vh, 2rem) 1rem',
                 }}
               >
                 <div
@@ -263,13 +263,13 @@ function PortfolioContent() {
                       animation: 'pulse-glow 2s ease-in-out infinite',
                     }}
                   >
-                    <AvatarSlamSVG style={{ width: '60px', height: '60px' }} glowColor="var(--red-accent)" />
+                    <AvatarSlamSVG style={{ width: '45px', height: '45px' }} glowColor="var(--red-accent)" />
                   </div>
 
                   <h1
                     style={{
                       fontFamily: 'var(--font-display)',
-                      fontSize: 'clamp(2.5rem, 8vw, 5rem)',
+                      fontSize: 'clamp(1.8rem, 6vw, 3.2rem)',
                       fontWeight: 700,
                       textTransform: 'uppercase',
                       letterSpacing: '0.2em',
@@ -286,7 +286,7 @@ function PortfolioContent() {
                   <p
                     style={{
                       fontFamily: 'var(--font-mono)',
-                      fontSize: '0.85rem',
+                      fontSize: 'min(0.75rem, 3vw)',
                       color: 'var(--text-secondary)',
                       textTransform: 'uppercase',
                       letterSpacing: '0.3em',
@@ -299,9 +299,8 @@ function PortfolioContent() {
                 {/* Ticker */}
                 <div
                   style={{
-                    marginTop: '60px',
-                    width: '100%',
-                    maxWidth: '900px',
+                    marginTop: '32px',
+                    width: 'min(90%, 900px)',
                     overflow: 'hidden',
                     borderTop: '1px solid var(--border-subtle)',
                     borderBottom: '1px solid var(--border-subtle)',
@@ -378,11 +377,11 @@ function PortfolioContent() {
                   <div style={{ marginBottom: '40px' }}>
                     <RingSVG style={{ width: '100px', height: '100px', marginBottom: '16px' }} accentColor="var(--gold)" />
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
-                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: 'var(--gold)', letterSpacing: '0.3em' }}>TONIGHT&apos;S CARD</span>
-                      <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '2.5rem', fontWeight: 700, color: 'var(--text-primary)' }}>MATCH CARD</h2>
+                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.55rem', color: 'var(--gold)', letterSpacing: '0.3em' }}>TONIGHT&apos;S CARD</span>
+                      <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.8rem', fontWeight: 700, color: 'var(--text-primary)' }}>MATCH CARD</h2>
                     </div>
                   </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                     {projects.map((project, index) => (
                       <MatchCard key={project.slug} project={project} index={index} />
                     ))}
@@ -409,8 +408,8 @@ function PortfolioContent() {
               >
                 <div style={{ maxWidth: '600px', width: '100%' }}>
                   <div style={{ marginBottom: '40px' }}>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: 'var(--cyan)', letterSpacing: '0.3em' }}>TITLE HOLDERS</span>
-                    <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '2.5rem', fontWeight: 700, color: 'var(--text-primary)' }}>CHAMPIONSHIP BELTS</h2>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.55rem', color: 'var(--cyan)', letterSpacing: '0.3em' }}>TITLE HOLDERS</span>
+                    <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.8rem', fontWeight: 700, color: 'var(--text-primary)' }}>CHAMPIONSHIP BELTS</h2>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     {skills.map((skill, index) => (
@@ -439,10 +438,10 @@ function PortfolioContent() {
               >
                 <div style={{ maxWidth: '600px', width: '100%' }}>
                   <div style={{ marginBottom: '40px' }}>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: 'var(--red-accent)', letterSpacing: '0.3em' }}>LOCKER ROOM</span>
-                    <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '2.5rem', fontWeight: 700, color: 'var(--text-primary)' }}>BACKSTAGE</h2>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.55rem', color: 'var(--red-accent)', letterSpacing: '0.3em' }}>LOCKER ROOM</span>
+                    <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.8rem', fontWeight: 700, color: 'var(--text-primary)' }}>BACKSTAGE</h2>
                   </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     {timeline.map((milestone, index) => (
                       <TimelineLocker key={`${milestone.year}-${milestone.title}`} milestone={milestone} index={index} />
                     ))}
@@ -500,8 +499,8 @@ function PortfolioContent() {
               zIndex: 90,
               display: 'flex',
               justifyContent: 'center',
-              gap: '24px',
-              padding: '8px',
+              gap: '16px',
+              padding: '6px',
               background: 'linear-gradient(transparent, rgba(6,6,10,0.9))',
               fontFamily: 'var(--font-mono)',
               fontSize: '0.55rem',

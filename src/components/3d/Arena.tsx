@@ -143,8 +143,7 @@ export default function Arena({ pyroActive = false, activeSection = 0 }: ArenaPr
        {/* Wrestler on the ramp */}
        <Wrestler 
          scale={0.8} 
-         position={[0, 0, -6]} 
-         rotation={[0, Math.PI, 0]} 
+         activeSection={activeSection}
        />
 
        {/* Spotlight Rig */}

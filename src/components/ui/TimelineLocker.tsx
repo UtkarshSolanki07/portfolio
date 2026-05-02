@@ -26,41 +26,44 @@ const TimelineLocker = ({ milestone, index }: TimelineLockerProps) => {
       viewport={{ once: true, margin: '-30px' }}
       transition={{
         duration: 0.5,
-        delay: index * 0.1,
+        delay: index * 0.08,
         ease: [0.16, 1, 0.3, 1],
       }}
       whileHover={{
-        y: -4,
-        boxShadow: `0 8px 24px rgba(0,0,0,0.4), 0 0 15px ${
+        y: -2,
+        boxShadow: `0 8px 32px rgba(0,0,0,0.3), 0 0 10px ${
           style.color === 'var(--cyan)'
-            ? 'rgba(0,229,255,0.15)'
+            ? 'rgba(0,229,255,0.1)'
             : style.color === 'var(--gold)'
-            ? 'rgba(212,175,55,0.15)'
+            ? 'rgba(212,175,55,0.1)'
             : style.color === 'var(--gold-light)'
-            ? 'rgba(240,208,96,0.15)'
-            : 'rgba(255,23,68,0.15)'
+            ? 'rgba(240,208,96,0.1)'
+            : 'rgba(255,23,68,0.1)'
         }`,
       }}
       style={{
-        background: 'var(--bg-card)',
-        border: '1px solid var(--border-subtle)',
+        background: 'rgba(10, 10, 15, 0.45)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+        border: '1px solid rgba(255, 255, 255, 0.08)',
         borderLeft: `3px solid ${style.color}`,
-        borderRadius: '2px',
-        padding: '16px 20px',
+        borderRadius: '4px',
+        padding: '10px 14px',
         position: 'relative',
         overflow: 'hidden',
+        boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
       }}
     >
       {/* Year badge */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
-        <span style={{ fontSize: '1.1rem' }}>{style.icon}</span>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+        <span style={{ fontSize: '0.9rem' }}>{style.icon}</span>
         <span
           style={{
             fontFamily: 'var(--font-mono)',
-            fontSize: '0.65rem',
+            fontSize: '0.55rem',
             color: style.color,
             textTransform: 'uppercase',
-            letterSpacing: '0.15em',
+            letterSpacing: '0.12em',
             fontWeight: 600,
           }}
         >
@@ -72,12 +75,12 @@ const TimelineLocker = ({ milestone, index }: TimelineLockerProps) => {
       <div
         style={{
           fontFamily: 'var(--font-display)',
-          fontSize: '1rem',
+          fontSize: '0.85rem',
           fontWeight: 600,
           textTransform: 'uppercase',
-          letterSpacing: '0.05em',
+          letterSpacing: '0.04em',
           color: 'var(--text-primary)',
-          marginBottom: '6px',
+          marginBottom: '4px',
         }}
       >
         {milestone.title}
@@ -87,9 +90,9 @@ const TimelineLocker = ({ milestone, index }: TimelineLockerProps) => {
       <div
         style={{
           fontFamily: 'var(--font-body)',
-          fontSize: '0.75rem',
-          color: 'var(--text-secondary)',
-          lineHeight: 1.6,
+          fontSize: '0.68rem',
+          color: 'var(--text-dim)',
+          lineHeight: 1.5,
         }}
       >
         {milestone.description}

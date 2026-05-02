@@ -1,8 +1,9 @@
 'use client'
 
-import { useRef, useMemo } from 'react'
+import { useRef, useMemo, useEffect } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
+import gsap from 'gsap'
 
 interface WrestlerProps {
     /** Scale of the wrestler model */
@@ -11,20 +12,44 @@ interface WrestlerProps {
     rotation?: [number, number, number]
     /** Position offset */
     position?: [number, number, number]
+    activeSection?: number
 }
 
 export default function Wrestler({
     scale = 1,
     rotation = [0, 0, 0],
     position = [0, 0, 0],
+    activeSection = 0
 }: WrestlerProps) {
     const meshRef = useRef<THREE.Group>(null)
     const chestRef = useRef<THREE.Object3D | null>(null)
     const leftArmRef = useRef<THREE.Object3D | null>(null)
     const rightArmRef = useRef<THREE.Object3D | null>(null)
+    const headRef = useRef<THREE.Object3D | null>(null)
+
+    // GSAP Animation for Section Transitions
+    useEffect(() => {
+        if (!meshRef.current) return
+
+        // Section 0: Entrance (Center of ramp)
+        // Section 1: Match Card (At the ring edge)
+        // Section 2: Championships (Inside the ring)
+        
+        const timeline = gsap.timeline({ defaults: { duration: 1.5, ease: "power2.inOut" } })
+
+        if (activeSection === 0) {
+            timeline.to(meshRef.current.position, { x: 0, y: 0, z: -6 })
+            timeline.to(meshRef.current.rotation, { y: Math.PI }, 0)
+        } else if (activeSection === 1) {
+            timeline.to(meshRef.current.position, { x: 0, y: 0, z: -3 })
+            timeline.to(meshRef.current.rotation, { y: Math.PI }, 0)
+        } else if (activeSection >= 2) {
+            timeline.to(meshRef.current.position, { x: 0, y: 0.5, z: 0 })
+            timeline.to(meshRef.current.rotation, { y: 0 }, 0)
+        }
+    }, [activeSection])
 
     useFrame((state) => {
-        const delta = state.clock.getDelta()
         const elapsed = state.clock.getElapsedTime()
 
         if (!meshRef.current) return
@@ -33,24 +58,30 @@ export default function Wrestler({
         if (!chestRef.current) chestRef.current = meshRef.current.getObjectByName('chest') || null
         if (!leftArmRef.current) leftArmRef.current = meshRef.current.getObjectByName('leftUpperArm') || null
         if (!rightArmRef.current) rightArmRef.current = meshRef.current.getObjectByName('rightUpperArm') || null
+        if (!headRef.current) headRef.current = meshRef.current.getObjectByName('head') || null
 
         // Calculate idle animations
         const breathing = Math.sin(elapsed * 0.8) * 0.02
         const sway = Math.sin(elapsed * 0.3) * 0.5 * (Math.PI / 180)
-        const armRotation = Math.sin(elapsed * 0.6) * 0.3
+        const armRotation = Math.sin(elapsed * 0.6) * 0.15
 
         // Apply transformations
         if (chestRef.current) {
             chestRef.current.scale.set(1 + breathing, 1 + breathing * 0.5, 1 + breathing)
         }
 
-        meshRef.current.rotation.y = rotation[1] + sway
+        // Only apply sway if not being animated by GSAP or as an additive
+        meshRef.current.rotation.y += Math.sin(elapsed * 0.5) * 0.001
 
         if (leftArmRef.current) {
-            leftArmRef.current.rotation.z = armRotation
+            leftArmRef.current.rotation.z = -0.2 + armRotation
         }
         if (rightArmRef.current) {
-            rightArmRef.current.rotation.z = -armRotation
+            rightArmRef.current.rotation.z = 0.2 - armRotation
+        }
+        
+        if (headRef.current) {
+            headRef.current.rotation.y = Math.sin(elapsed * 0.4) * 0.1
         }
     })
 

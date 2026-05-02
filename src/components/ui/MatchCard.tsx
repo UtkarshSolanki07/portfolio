@@ -12,10 +12,10 @@ interface MatchCardProps {
 
 const MatchCard = ({ project, index, onClick }: MatchCardProps) => {
   const tierColors = {
-    'main-event': { border: 'var(--gold)', bg: 'rgba(212,175,55,0.06)', glow: 'rgba(212,175,55,0.2)' },
-    featured: { border: 'var(--cyan)', bg: 'rgba(0,229,255,0.06)', glow: 'rgba(0,229,255,0.2)' },
-    undercard: { border: 'var(--red-accent)', bg: 'rgba(255,23,68,0.06)', glow: 'rgba(255,23,68,0.2)' },
-    'dark-match': { border: 'var(--text-dim)', bg: 'rgba(80,80,96,0.06)', glow: 'rgba(80,80,96,0.2)' },
+    'main-event': { border: 'var(--gold)', bg: 'rgba(212,175,55,0.08)', glow: 'rgba(212,175,55,0.15)' },
+    featured: { border: 'var(--cyan)', bg: 'rgba(0,229,255,0.08)', glow: 'rgba(0,229,255,0.15)' },
+    undercard: { border: 'var(--red-accent)', bg: 'rgba(255,23,68,0.08)', glow: 'rgba(255,23,68,0.15)' },
+    'dark-match': { border: 'var(--text-dim)', bg: 'rgba(80,80,96,0.08)', glow: 'rgba(80,80,96,0.15)' },
   }
 
   const colors = tierColors[project.tier]
@@ -27,14 +27,14 @@ const MatchCard = ({ project, index, onClick }: MatchCardProps) => {
       viewport={{ once: true, margin: '-50px' }}
       transition={{
         duration: 0.6,
-        delay: index * 0.15,
+        delay: index * 0.1,
         ease: [0.16, 1, 0.3, 1],
       }}
       whileHover={{
-        scale: 1.02,
-        boxShadow: `0 0 30px ${colors.glow}, 0 8px 32px rgba(0,0,0,0.4)`,
+        scale: 1.01,
+        boxShadow: `0 0 20px ${colors.glow}, 0 8px 32px rgba(0,0,0,0.3)`,
       }}
-      whileTap={{ scale: 0.98 }}
+      whileTap={{ scale: 0.99 }}
       onClick={onClick}
       role="button"
       tabIndex={0}
@@ -46,17 +46,21 @@ const MatchCard = ({ project, index, onClick }: MatchCardProps) => {
         }
       }}
       style={{
-        background: 'var(--bg-card)',
-        border: `1px solid ${colors.border}`,
-        borderRadius: '2px',
+        background: 'rgba(10, 10, 15, 0.45)',
+        backdropFilter: 'blur(14px)',
+        WebkitBackdropFilter: 'blur(14px)',
+        border: `1px solid rgba(255, 255, 255, 0.08)`,
+        borderLeft: `3px solid ${colors.border}`,
+        borderRadius: '4px',
         padding: '0',
         cursor: 'pointer',
         position: 'relative',
         overflow: 'hidden',
         outline: 'none',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
       }}
     >
-      {/* Background tint */}
+      {/* Background tier tint */}
       <div
         style={{
           position: 'absolute',
@@ -69,8 +73,8 @@ const MatchCard = ({ project, index, onClick }: MatchCardProps) => {
       {/* Top bar - match label */}
       <div
         style={{
-          padding: '8px 16px',
-          borderBottom: `1px solid ${colors.border}`,
+          padding: '6px 12px',
+          borderBottom: `1px solid rgba(255, 255, 255, 0.05)`,
           background: `linear-gradient(90deg, ${colors.bg}, transparent)`,
           display: 'flex',
           justifyContent: 'space-between',
@@ -80,10 +84,10 @@ const MatchCard = ({ project, index, onClick }: MatchCardProps) => {
         <span
           style={{
             fontFamily: 'var(--font-mono)',
-            fontSize: '0.6rem',
+            fontSize: '0.55rem',
             color: colors.border,
             textTransform: 'uppercase',
-            letterSpacing: '0.15em',
+            letterSpacing: '0.12em',
           }}
         >
           {project.matchLabel}
@@ -91,7 +95,7 @@ const MatchCard = ({ project, index, onClick }: MatchCardProps) => {
         <span
           style={{
             fontFamily: 'var(--font-mono)',
-            fontSize: '0.5rem',
+            fontSize: '0.45rem',
             color: 'var(--text-dim)',
             textTransform: 'uppercase',
           }}
@@ -103,10 +107,10 @@ const MatchCard = ({ project, index, onClick }: MatchCardProps) => {
       {/* VS Card Body */}
       <div
         style={{
-          padding: '20px 16px',
+          padding: '12px 12px',
           display: 'flex',
           alignItems: 'center',
-          gap: '16px',
+          gap: '12px',
           position: 'relative',
           zIndex: 1,
         }}
@@ -116,10 +120,10 @@ const MatchCard = ({ project, index, onClick }: MatchCardProps) => {
           <div
             style={{
               fontFamily: 'var(--font-display)',
-              fontSize: '1rem',
+              fontSize: '0.85rem',
               fontWeight: 600,
               textTransform: 'uppercase',
-              letterSpacing: '0.1em',
+              letterSpacing: '0.05em',
               color: 'var(--text-primary)',
             }}
           >
@@ -128,9 +132,9 @@ const MatchCard = ({ project, index, onClick }: MatchCardProps) => {
           <div
             style={{
               fontFamily: 'var(--font-mono)',
-              fontSize: '0.55rem',
+              fontSize: '0.5rem',
               color: 'var(--text-dim)',
-              marginTop: '2px',
+              marginTop: '1px',
             }}
           >
             FULL STACK DEV
@@ -140,8 +144,8 @@ const MatchCard = ({ project, index, onClick }: MatchCardProps) => {
         {/* VS divider */}
         <div
           style={{
-            width: '40px',
-            height: '40px',
+            width: '32px',
+            height: '32px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -155,13 +159,13 @@ const MatchCard = ({ project, index, onClick }: MatchCardProps) => {
               background: colors.border,
               transform: 'rotate(45deg)',
               position: 'absolute',
-              opacity: 0.15,
+              opacity: 0.1,
             }}
           />
           <span
             style={{
               fontFamily: 'var(--font-display)',
-              fontSize: '0.9rem',
+              fontSize: '0.75rem',
               fontWeight: 700,
               color: colors.border,
               position: 'relative',
@@ -177,10 +181,10 @@ const MatchCard = ({ project, index, onClick }: MatchCardProps) => {
           <div
             style={{
               fontFamily: 'var(--font-display)',
-              fontSize: '1rem',
+              fontSize: '0.85rem',
               fontWeight: 600,
               textTransform: 'uppercase',
-              letterSpacing: '0.1em',
+              letterSpacing: '0.05em',
               color: colors.border,
             }}
           >
@@ -189,9 +193,9 @@ const MatchCard = ({ project, index, onClick }: MatchCardProps) => {
           <div
             style={{
               fontFamily: 'var(--font-mono)',
-              fontSize: '0.55rem',
+              fontSize: '0.5rem',
               color: 'var(--text-dim)',
-              marginTop: '2px',
+              marginTop: '1px',
             }}
           >
             {project.stats.features} FEATURES
@@ -202,9 +206,9 @@ const MatchCard = ({ project, index, onClick }: MatchCardProps) => {
       {/* Stack badges */}
       <div
         style={{
-          padding: '0 16px 12px',
+          padding: '0 12px 8px',
           display: 'flex',
-          gap: '4px',
+          gap: '3px',
           flexWrap: 'wrap',
           position: 'relative',
           zIndex: 1,
@@ -215,12 +219,13 @@ const MatchCard = ({ project, index, onClick }: MatchCardProps) => {
             key={tech}
             style={{
               fontFamily: 'var(--font-mono)',
-              fontSize: '0.5rem',
-              padding: '2px 6px',
-              border: '1px solid var(--border-subtle)',
+              fontSize: '0.45rem',
+              padding: '1px 5px',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
               borderRadius: '1px',
               color: 'var(--text-secondary)',
               textTransform: 'uppercase',
+              background: 'rgba(255, 255, 255, 0.02)',
             }}
           >
             {tech}
@@ -231,11 +236,11 @@ const MatchCard = ({ project, index, onClick }: MatchCardProps) => {
       {/* Description - subtle */}
       <div
         style={{
-          padding: '0 16px 16px',
+          padding: '0 12px 12px',
           fontFamily: 'var(--font-body)',
-          fontSize: '0.72rem',
+          fontSize: '0.65rem',
           color: 'var(--text-dim)',
-          lineHeight: 1.5,
+          lineHeight: 1.4,
           position: 'relative',
           zIndex: 1,
         }}
@@ -243,22 +248,23 @@ const MatchCard = ({ project, index, onClick }: MatchCardProps) => {
         {project.description}
       </div>
 
-      {/* Bottom accent line with shimmer */}
+      {/* Bottom accent line */}
       <div
         style={{
-          height: '2px',
+          height: '1px',
           background: `linear-gradient(90deg, transparent, ${colors.border}, transparent)`,
           position: 'relative',
           overflow: 'hidden',
+          opacity: 0.6,
         }}
       >
         <div
           style={{
             position: 'absolute',
             inset: 0,
-            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent)',
+            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)',
             backgroundSize: '200% 100%',
-            animation: 'shimmer 3s infinite linear',
+            animation: 'shimmer 4s infinite linear',
           }}
         />
       </div>

@@ -21,9 +21,9 @@ export default function IntroPromo({ onComplete }: { onComplete: () => void }) {
     return () => window.removeEventListener('message', handleMessage)
   }, [onComplete])
 
-  // Fallback: if 14s pass and promo hasn't fired (e.g. slow load), dismiss anyway
+  // Fallback: if 8s pass and promo hasn't fired (e.g. slow load), dismiss anyway
   useEffect(() => {
-    const fallback = setTimeout(onComplete, 14_000)
+    const fallback = setTimeout(onComplete, 8_000)
     return () => clearTimeout(fallback)
   }, [onComplete])
 

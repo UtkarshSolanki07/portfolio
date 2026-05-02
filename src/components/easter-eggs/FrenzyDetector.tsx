@@ -65,7 +65,7 @@ export default function FrenzyDetector() {
             transition={{ duration: 0.15, ease: 'easeOut' }}
             style={{
               fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(1.5rem, 4vw, 3rem)',
+              fontSize: 'clamp(1.2rem, 3.5vw, 2.2rem)',
               fontWeight: 700,
               textTransform: 'uppercase',
               letterSpacing: '0.1em',

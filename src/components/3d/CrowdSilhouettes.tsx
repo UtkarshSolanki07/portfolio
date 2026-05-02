@@ -23,11 +23,30 @@ function generateTierPositions() {
   TIERS.forEach((tier, tierIndex) => {
     for (let i = 0; i < tier.count; i++) {
       const seed = tierIndex * 1000 + i
-      // Spread figures in a full arc around the ring (skip behind titantron area slightly)
-      const angle = (i / tier.count) * Math.PI * 2 + seededRandom(seed) * 0.15
+      
+      // Calculate normalized angle (0 to 1)
+      const t = i / tier.count
+      
+      // We want to avoid the "North" area (Entrance/Titantron). 
+      // In Three.js, with the entrance at z = -12 and titantron at z = -30:
+      // - North is -Z (around angle -PI/2 or 3PI/2)
+      // - South is +Z (around angle PI/2)
+      // - West is -X (around angle PI)
+      // - East is +X (around angle 0)
+      
+      // Arc strategy: 
+      // Map 0-1 to a restricted arc that covers West, South, and East.
+      // PI/2 is South. Let's cover from -0.1*PI (Eastish) through PI/2 (South) to 1.1*PI (Westish).
+      // This leaves a gap from 1.1*PI to 1.9*PI (North/Entrance).
+      
+      const startAngle = -0.15 * Math.PI
+      const endAngle = 1.15 * Math.PI
+      const angle = startAngle + t * (endAngle - startAngle) + seededRandom(seed) * 0.05
+      
       const radiusJitter = tier.radius + (seededRandom(seed + 1) - 0.5) * 3
       const x = Math.cos(angle) * radiusJitter
-      const z = Math.sin(angle) * radiusJitter * 0.75 // Slightly compressed on Z for perspective
+      const z = Math.sin(angle) * radiusJitter
+      
       const y = tier.yBase + seededRandom(seed + 2) * tier.rowHeight
       const scale = 0.7 + seededRandom(seed + 3) * 0.4
       const phase = seededRandom(seed + 4) * Math.PI * 2
@@ -99,15 +118,18 @@ export default function CrowdSilhouettes() {
       </instancedMesh>
 
       {/* Crowd cheering flash lights — reduced count for performance */}
-      {Array.from({ length: 8 }).map((_, i) => {
-        const angle = (i / 8) * Math.PI * 2
+      {Array.from({ length: 12 }).map((_, i) => {
+        const t = i / 11
+        const startAngle = -0.15 * Math.PI
+        const endAngle = 1.15 * Math.PI
+        const angle = startAngle + t * (endAngle - startAngle)
         const r = 13 + Math.sin(i * 7.3) * 4
         return (
           <pointLight
             key={`crowd-light-${i}`}
-            position={[Math.cos(angle) * r, 2, Math.sin(angle) * r * 0.75]}
-            intensity={1.5}
-            distance={12}
+            position={[Math.cos(angle) * r, 2.5, Math.sin(angle) * r]}
+            intensity={2}
+            distance={15}
             decay={2}
             color={i % 3 === 0 ? '#d4af37' : i % 3 === 1 ? '#ff1744' : '#00e5ff'}
           />

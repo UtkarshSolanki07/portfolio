@@ -66,9 +66,14 @@ export default function MenuPanel({ onHoverItem, onSelectItem }: MenuPanelProps)
         display: 'flex',
         flexDirection: 'column',
         gap: '2px',
-        width: isExpanded ? '220px' : '52px',
+        width: isExpanded ? '180px' : '48px',
         transition: 'width 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
         zIndex: 100,
+        background: 'rgba(10, 10, 15, 0.6)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+        borderRight: '1px solid rgba(255, 255, 255, 0.05)',
+        boxShadow: '4px 0 24px rgba(0, 0, 0, 0.3)',
       }}
     >
       {/* Menu header */}
@@ -108,8 +113,8 @@ export default function MenuPanel({ onHoverItem, onSelectItem }: MenuPanelProps)
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '12px',
-              padding: '10px 12px',
+              gap: '10px',
+              padding: '8px 10px',
               background: isActive
                 ? 'rgba(212,175,55,0.1)'
                 : 'transparent',
@@ -155,7 +160,7 @@ export default function MenuPanel({ onHoverItem, onSelectItem }: MenuPanelProps)
                   transition={{ duration: 0.15 }}
                   style={{
                     fontFamily: 'var(--font-display)',
-                    fontSize: '0.85rem',
+                    fontSize: '0.75rem',
                     fontWeight: isActive ? 600 : 400,
                     letterSpacing: '0.1em',
                     color: isActive ? 'var(--gold)' : 'var(--text-secondary)',

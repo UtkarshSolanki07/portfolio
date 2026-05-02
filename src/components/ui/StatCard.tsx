@@ -25,24 +25,27 @@ export default function StatCard() {
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       style={{
-        width: '320px',
-        background: 'var(--bg-card)',
-        border: '1px solid var(--border-subtle)',
-        borderRadius: '2px',
+        width: '240px',
+        background: 'rgba(10, 10, 15, 0.65)',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
+        border: '1px solid rgba(212, 175, 55, 0.2)',
+        borderRadius: '4px',
         overflow: 'hidden',
         position: 'relative',
         fontFamily: 'var(--font-body)',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
       }}
     >
       {/* Header with photo + name */}
-      <div style={{ display: 'flex', gap: '12px', padding: '16px 16px 12px' }}>
+      <div style={{ display: 'flex', gap: '10px', padding: '10px 10px 8px' }}>
         {/* Photo slot — hex frame placeholder */}
         <div
           style={{
-            width: '80px',
-            height: '90px',
-            background: 'linear-gradient(135deg, var(--bg-darker), var(--bg-card-hover))',
-            border: '1px solid var(--border-gold)',
+            width: '50px',
+            height: '60px',
+            background: 'linear-gradient(135deg, rgba(10, 10, 15, 0.8), rgba(20, 20, 25, 0.8))',
+            border: '1px solid rgba(212, 175, 55, 0.4)',
             clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
             display: 'flex',
             alignItems: 'center',
@@ -52,7 +55,6 @@ export default function StatCard() {
             overflow: 'hidden',
           }}
         >
-          {/* Try to load character photo, fallback to hex placeholder */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/images/utkarsh-action.png"
@@ -72,14 +74,12 @@ export default function StatCard() {
           <span
             style={{
               fontFamily: 'var(--font-mono)',
-              fontSize: '0.5rem',
+              fontSize: '0.45rem',
               color: 'var(--text-dim)',
               textAlign: 'center',
-              lineHeight: 1.2,
+              lineHeight: 1.1,
             }}
           >
-            PHOTO
-            <br />
             SLOT
           </span>
         </div>
@@ -89,7 +89,7 @@ export default function StatCard() {
           <div
             style={{
               fontFamily: 'var(--font-display)',
-              fontSize: '1.4rem',
+              fontSize: '1rem',
               fontWeight: 700,
               textTransform: 'uppercase',
               letterSpacing: '0.05em',
@@ -102,19 +102,19 @@ export default function StatCard() {
           <div
             style={{
               fontFamily: 'var(--font-display)',
-              fontSize: '0.75rem',
+              fontSize: '0.65rem',
               fontWeight: 400,
               textTransform: 'uppercase',
-              letterSpacing: '0.15em',
+              letterSpacing: '0.1em',
               color: 'var(--text-secondary)',
-              marginTop: '2px',
+              marginTop: '1px',
             }}
           >
             SOLANKI
           </div>
           <div
             style={{
-              marginTop: '8px',
+              marginTop: '4px',
               display: 'flex',
               alignItems: 'baseline',
               gap: '4px',
@@ -123,7 +123,7 @@ export default function StatCard() {
             <span
               style={{
                 fontFamily: 'var(--font-display)',
-                fontSize: '2rem',
+                fontSize: '1.4rem',
                 fontWeight: 700,
                 color: 'var(--gold)',
                 lineHeight: 1,
@@ -134,57 +134,32 @@ export default function StatCard() {
             <span
               style={{
                 fontFamily: 'var(--font-mono)',
-                fontSize: '0.55rem',
+                fontSize: '0.5rem',
                 color: 'var(--text-dim)',
                 textTransform: 'uppercase',
               }}
             >
-              OVERALL
+              OVR
             </span>
           </div>
         </div>
       </div>
 
-      {/* EQ Bars — visual flair */}
-      <div
-        style={{
-          display: 'flex',
-          gap: '2px',
-          padding: '0 16px',
-          height: '24px',
-          alignItems: 'flex-end',
-        }}
-      >
-        {Array.from({ length: 20 }).map((_, i) => (
-          <div
-            key={i}
-            style={{
-              flex: 1,
-              background: i < 7 ? 'var(--gold)' : i < 14 ? 'var(--cyan)' : 'var(--red-accent)',
-              borderRadius: '1px 1px 0 0',
-              opacity: 0.7,
-              animation: `eq-bar ${0.8 + i * 0.05}s ease-in-out infinite`,
-              animationDelay: `${i * 0.08}s`,
-            }}
-          />
-        ))}
-      </div>
-
       {/* Divider */}
-      <div style={{ height: '1px', background: 'var(--border-subtle)', margin: '8px 16px' }} />
+      <div style={{ height: '1px', background: 'rgba(255, 255, 255, 0.08)', margin: '0 10px' }} />
 
       {/* Stat Bars */}
-      <div style={{ padding: '4px 16px 12px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+      <div style={{ padding: '6px 10px 8px', display: 'flex', flexDirection: 'column', gap: '3px' }}>
         {statEntries.map(({ key, label, color }) => {
           const value = superstarStats[key as keyof typeof superstarStats]
           return (
-            <div key={key} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div key={key} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <span
                 style={{
                   fontFamily: 'var(--font-mono)',
-                  fontSize: '0.6rem',
+                  fontSize: '0.55rem',
                   color: 'var(--text-dim)',
-                  width: '28px',
+                  width: '24px',
                   textAlign: 'right',
                   flexShrink: 0,
                 }}
@@ -194,7 +169,7 @@ export default function StatCard() {
               <div
                 style={{
                   flex: 1,
-                  height: '6px',
+                  height: '4px',
                   background: 'rgba(255,255,255,0.06)',
                   borderRadius: '1px',
                   overflow: 'hidden',
@@ -216,7 +191,7 @@ export default function StatCard() {
                     style={{
                       position: 'absolute',
                       inset: 0,
-                      background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)',
+                      background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)',
                       backgroundSize: '200% 100%',
                       animation: 'shimmer 2s infinite linear',
                     }}
@@ -226,9 +201,9 @@ export default function StatCard() {
               <span
                 style={{
                   fontFamily: 'var(--font-mono)',
-                  fontSize: '0.6rem',
+                  fontSize: '0.55rem',
                   color,
-                  width: '20px',
+                  width: '18px',
                   textAlign: 'right',
                   flexShrink: 0,
                 }}
@@ -243,10 +218,10 @@ export default function StatCard() {
       {/* Skill Badges */}
       <div
         style={{
-          padding: '8px 16px 12px',
+          padding: '4px 10px 8px',
           display: 'flex',
           flexWrap: 'wrap',
-          gap: '4px',
+          gap: '3px',
         }}
       >
         {skills.map((skill) => (
@@ -254,17 +229,17 @@ export default function StatCard() {
             key={skill.name}
             style={{
               fontFamily: 'var(--font-mono)',
-              fontSize: '0.55rem',
-              padding: '2px 8px',
+              fontSize: '0.5rem',
+              padding: '1px 6px',
               borderRadius: '1px',
               textTransform: 'uppercase',
-              letterSpacing: '0.05em',
+              letterSpacing: '0.02em',
               border: `1px solid ${
                 skill.category === 'gold'
-                  ? 'var(--border-gold)'
+                  ? 'rgba(212,175,55,0.3)'
                   : skill.category === 'cyan'
-                  ? 'var(--border-cyan)'
-                  : 'rgba(255,23,68,0.3)'
+                  ? 'rgba(0,229,255,0.3)'
+                  : 'rgba(255,23,68,0.2)'
               }`,
               color:
                 skill.category === 'gold'
@@ -272,12 +247,7 @@ export default function StatCard() {
                   : skill.category === 'cyan'
                   ? 'var(--cyan)'
                   : 'var(--red-accent)',
-              background:
-                skill.category === 'gold'
-                  ? 'rgba(212,175,55,0.08)'
-                  : skill.category === 'cyan'
-                  ? 'rgba(0,229,255,0.08)'
-                  : 'rgba(255,23,68,0.08)',
+              background: 'rgba(255, 255, 255, 0.03)',
             }}
           >
             {skill.name}
@@ -288,12 +258,11 @@ export default function StatCard() {
       {/* Attitude Meter — bottom bar */}
       <div
         style={{
-          height: '4px',
+          height: '3px',
           background: 'rgba(255,255,255,0.04)',
           position: 'relative',
           overflow: 'hidden',
         }}
-        title={`Attitude Meter: ${Math.floor(attitudePercent)}%`}
       >
         <motion.div
           style={{

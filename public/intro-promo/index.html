@@ -16,21 +16,33 @@
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      width: 1920px;
-      height: 1080px;
+      width: 100vw;
+      height: 100vh;
       overflow: hidden;
       background: #0a0a0f;
       font-family: "Bebas Neue", "Impact", sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #root {
+      width: 1920px;
+      height: 1080px;
+      position: relative;
+      flex-shrink: 0;
+      transform-origin: center center;
     }
 
     /* ─── Scene base ─── */
     .scene {
       position: absolute;
       top: 0; left: 0;
-      width: 1920px;
-      height: 1080px;
+      width: 100%;
+      height: 100%;
       overflow: hidden;
       background: #0a0a0f;
+      will-change: transform, opacity;
     }
 
     /* Scene 1 visible; all others hidden until transitioned in */
@@ -42,20 +54,23 @@
     #s6 { z-index: 6;  opacity: 0; }
     #s7 { z-index: 7;  opacity: 0; }
 
-    /* ─── Global overlays (always above scenes) ─── */
-    #scanlines, #flash, #glitch-r, #glitch-g, #glitch-b {
+    /* Scanline effect */
+    .scene::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+      background-size: 100% 4px, 3px 100%;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* ─── Global overlays ─── */
+    #flash, #glitch-r, #glitch-g, #glitch-b {
       position: absolute;
       top: 0; left: 0;
-      width: 1920px; height: 1080px;
+      width: 100%; height: 100%;
       pointer-events: none;
-    }
-    #scanlines {
-      z-index: 50;
-      background-image: repeating-linear-gradient(
-        0deg,
-        rgba(0,0,0,0) 0px, rgba(0,0,0,0) 2px,
-        rgba(0,0,0,0.16) 2px, rgba(0,0,0,0.16) 4px
-      );
     }
     /* Flash: warm gold wash instead of harsh white */
     #flash        { z-index: 200; background: rgba(212,175,55,0.85); opacity: 0; }
@@ -69,7 +84,7 @@
       width: 100%; height: 100%;
       display: flex; flex-direction: column;
       justify-content: center;
-      padding: 120px 160px;
+      padding: 120px 200px;
       gap: 28px;
       box-sizing: border-box;
       position: relative; z-index: 2;
@@ -88,7 +103,7 @@
     .lbl-dim  { color: rgba(212,175,55,0.55); }
     .h1 {
       font-family: "Bebas Neue", "Impact", sans-serif;
-      font-size: 220px;
+      font-size: 190px;
       line-height: 0.85;
       color: #f0ede0;
       text-transform: uppercase;
@@ -108,7 +123,7 @@
     }
 
     /* ════════════════════════════════════════
-       SCENE 1 — UTKARSH SOLANKI (0–1s)
+       SCENE 1 — UTKARSH SOLANKI (0–0.8s)
     ════════════════════════════════════════ */
     #s1-warning {
       font-family: "Bebas Neue", "Impact", sans-serif;
@@ -119,7 +134,7 @@
     }
     #s1-name {
       font-family: "Bebas Neue", "Impact", sans-serif;
-      font-size: 230px;
+      font-size: 190px;
       line-height: 0.82;
       color: #d4af37;
       letter-spacing: 0.04em;
@@ -131,17 +146,18 @@
     #s1-bar2{ position: absolute; bottom: 8px; left: 0; width: 100%; height: 3px; background: #ff1744; }
 
     /* ════════════════════════════════════════
-       SCENE 2 — FULL STACK ENGINEER (1–3s)
+       SCENE 2 — FULL STACK ENGINEER (0.8–1.8s)
     ════════════════════════════════════════ */
     #s2-codebg {
       position: absolute; top: 0; left: 0;
-      width: 100%; height: 150%;         /* oversized for scroll */
+      width: 100%; height: 150%;
       font-family: "Courier New", monospace;
       font-size: 18px; line-height: 1.7;
       color: rgba(212,175,55,0.055);
       white-space: pre;
       padding: 40px;
       pointer-events: none;
+      filter: blur(1px);
     }
     #s2-glow {
       position: absolute; top: 50%; left: -100px;
@@ -149,11 +165,11 @@
       width: 700px; height: 700px; border-radius: 50%;
       background: radial-gradient(circle, rgba(212,175,55,0.07) 0%, rgba(10,10,15,0) 70%);
     }
-    #s2-title { font-size: 170px; line-height: 0.88; color: #f0ede0; letter-spacing: 0.03em; text-transform: uppercase; }
+    #s2-title { font-size: 150px; line-height: 0.88; color: #f0ede0; letter-spacing: 0.03em; text-transform: uppercase; }
     #s2-sub { color: rgba(212,175,55,0.55); font-size: 44px; letter-spacing: 0.35em; }
 
     /* ════════════════════════════════════════
-       SCENE 3 — THE MAIN EVENT (3–5s)
+       SCENE 3 — THE MAIN EVENT (1.8–2.8s)
     ════════════════════════════════════════ */
     #s3-spot {
       position: absolute; top: -300px; left: 50%;
@@ -180,11 +196,14 @@
       width: 1700px; height: 1px;
       background: linear-gradient(90deg, rgba(212,175,55,0) 0%, rgba(212,175,55,0.15) 20%, rgba(212,175,55,0.15) 80%, rgba(212,175,55,0) 100%);
     }
-    #s3-title { font-size: 260px; line-height: 0.82; color: #f0ede0; letter-spacing: 0.07em; text-transform: uppercase; }
+    #s3-title { 
+      font-size: 190px; line-height: 0.82; color: #f0ede0; letter-spacing: 0.07em; text-transform: uppercase;
+      text-shadow: 0 0 20px rgba(240,237,224,0.3);
+    }
     #s3-sub { color: rgba(240,237,224,0.35); letter-spacing: 0.4em; }
 
     /* ════════════════════════════════════════
-       SCENE 4 — BUILT TO LAST (5–7s)
+       SCENE 4 — BUILT TO LAST (2.8–3.8s)
     ════════════════════════════════════════ */
     #s4-glowR {
       position: absolute; top: 50%; right: -100px;
@@ -192,7 +211,7 @@
       width: 700px; height: 700px; border-radius: 50%;
       background: radial-gradient(circle, rgba(255,23,68,0.07) 0%, rgba(10,10,15,0) 70%);
     }
-    #s4-title { font-size: 160px; line-height: 0.9; color: #f0ede0; letter-spacing: 0.04em; text-transform: uppercase; }
+    #s4-title { font-size: 140px; line-height: 0.9; color: #f0ede0; letter-spacing: 0.04em; text-transform: uppercase; }
     #s4-stack { display: flex; gap: 40px; flex-wrap: wrap; align-items: center; }
     .badge {
       font-family: "Bebas Neue", "Impact", sans-serif;
@@ -200,20 +219,28 @@
       color: #d4af37;
       border: 2px solid rgba(212,175,55,0.45);
       padding: 12px 36px;
+      background: rgba(212,175,55, 0.03);
+      backdrop-filter: blur(4px);
+      transition: all 0.3s ease;
+    }
+    .badge:hover {
+      background: rgba(212,175,55, 0.1);
+      border-color: #d4af37;
+      box-shadow: 0 0 20px rgba(212,175,55, 0.2);
     }
 
     /* ════════════════════════════════════════
-       SCENE 5 — 99 OVR ATTITUDE (7–9s)
+       SCENE 5 — 99 OVR ATTITUDE (3.8–4.8s)
     ════════════════════════════════════════ */
     #s5-num {
-      font-size: 340px; line-height: 0.78;
+      font-size: 280px; line-height: 0.78;
       color: #ff1744;
       letter-spacing: -0.02em;
     }
     #s5-ovr { font-size: 80px; letter-spacing: 0.12em; color: #d4af37; }
-    /* Stat bars — positioned right side */
+    /* Stat bars — positioned right side with more safety margin */
     #s5-bars {
-      position: absolute; right: 140px; top: 50%;
+      position: absolute; right: 200px; top: 50%;
       display: flex; flex-direction: column; gap: 20px;
     }
     .bar-row { display: flex; align-items: center; gap: 18px; }
@@ -232,10 +259,10 @@
     }
 
     /* ════════════════════════════════════════
-       SCENE 6 — VERSATILE. RELENTLESS. (9–11s)
+       SCENE 6 — VERSATILE. RELENTLESS. (4.8–5.8s)
     ════════════════════════════════════════ */
     #s6-title {
-      font-size: 170px; line-height: 0.85;
+      font-size: 150px; line-height: 0.85;
       color: #d4af37; letter-spacing: 0.04em; text-transform: uppercase;
     }
     #s6-dot { color: #ff1744; }
@@ -250,7 +277,7 @@
     }
 
     /* ════════════════════════════════════════
-       SCENE 7 — ENTER THE ARENA (11–12s)
+       SCENE 7 — ENTER THE ARENA (5.8–6.8s)
     ════════════════════════════════════════ */
     #s7-glow {
       position: absolute; top: 50%; left: 50%;
@@ -270,7 +297,7 @@
       color: rgba(212,175,55,0.45);
     }
     #s7-cta {
-      font-size: 230px; line-height: 0.82;
+      font-size: 190px; line-height: 0.82;
       color: #d4af37; letter-spacing: 0.07em; text-transform: uppercase;
       text-shadow: 0 0 80px rgba(212,175,55,0.5), 0 0 200px rgba(212,175,55,0.2);
     }
@@ -278,29 +305,19 @@
   </style>
 </head>
 <body>
-  <!--
-    HyperFrames composition — "intro-promo"
-    Duration: 12s | 7 scenes | CSS+GSAP | No video files
-    DESIGN: The Main Event (see DESIGN.md)
-  -->
   <div
     id="root"
     data-composition-id="intro-promo"
     data-width="1920"
     data-height="1080"
     data-start="0"
-    data-duration="12"
+    data-duration="6.8"
   >
-    <!-- ── Persistent overlays (always rendered above scenes) ── -->
-    <div id="scanlines"></div>
     <div id="flash"></div>
     <div id="glitch-r"></div>
     <div id="glitch-g"></div>
     <div id="glitch-b"></div>
 
-    <!-- ════════════════════════════════════════
-         SCENE 1 — UTKARSH SOLANKI (0–1s)
-    ════════════════════════════════════════ -->
     <div id="s1" class="scene">
       <div id="s1-bar"></div>
       <div id="s1-bar2"></div>
@@ -310,9 +327,6 @@
       </div>
     </div>
 
-    <!-- ════════════════════════════════════════
-         SCENE 2 — FULL STACK ENGINEER (1–3s)
-    ════════════════════════════════════════ -->
     <div id="s2" class="scene">
       <div id="s2-codebg">const engineer = {
   name:    'Utkarsh Solanki',
@@ -338,9 +352,6 @@ export default engineer;</div>
       </div>
     </div>
 
-    <!-- ════════════════════════════════════════
-         SCENE 3 — THE MAIN EVENT (3–5s)
-    ════════════════════════════════════════ -->
     <div id="s3" class="scene">
       <div id="s3-spot"></div>
       <div id="s3-ropes"></div>
@@ -351,9 +362,6 @@ export default engineer;</div>
       </div>
     </div>
 
-    <!-- ════════════════════════════════════════
-         SCENE 4 — BUILT TO LAST (5–7s)
-    ════════════════════════════════════════ -->
     <div id="s4" class="scene">
       <div id="s4-glowR"></div>
       <div class="sc">
@@ -369,9 +377,6 @@ export default engineer;</div>
       </div>
     </div>
 
-    <!-- ════════════════════════════════════════
-         SCENE 5 — 99 OVR ATTITUDE (7–9s)
-    ════════════════════════════════════════ -->
     <div id="s5" class="scene">
       <div class="sc">
         <div id="s5-lbl" class="lbl lbl-dim">Career Rating</div>
@@ -407,9 +412,6 @@ export default engineer;</div>
       </div>
     </div>
 
-    <!-- ════════════════════════════════════════
-         SCENE 6 — VERSATILE. RELENTLESS. (9–11s)
-    ════════════════════════════════════════ -->
     <div id="s6" class="scene">
       <div class="sc">
         <div id="s6-lbl" class="lbl lbl-dim">Championship Record</div>
@@ -424,9 +426,6 @@ export default engineer;</div>
       </div>
     </div>
 
-    <!-- ════════════════════════════════════════
-         SCENE 7 — ENTER THE ARENA (11–12s)
-    ════════════════════════════════════════ -->
     <div id="s7" class="scene">
       <div id="s7-glow"></div>
       <div id="s7-monogram">US</div>
@@ -437,13 +436,29 @@ export default engineer;</div>
       </div>
     </div>
 
-  </div><!-- /#root -->
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js" crossorigin="anonymous"></script>
   <script>
     window.__timelines = window.__timelines || {};
 
-    // ─── Seeded PRNG (mulberry32) — no Math.random() per HyperFrames rules ───
+    function handleResize() {
+      const root = document.getElementById('root');
+      const containerWidth = window.innerWidth;
+      const containerHeight = window.innerHeight;
+      const targetWidth = 1920;
+      const targetHeight = 1080;
+      
+      const scaleX = containerWidth / targetWidth;
+      const scaleY = containerHeight / targetHeight;
+      const scale = Math.min(scaleX, scaleY);
+      
+      root.style.transform = `scale(${scale})`;
+    }
+
+    window.addEventListener('resize', handleResize);
+    handleResize();
+
     function mulberry32(seed) {
       return function() {
         seed |= 0; seed = seed + 0x6D2B79F5 | 0;
@@ -455,172 +470,137 @@ export default engineer;</div>
 
     var tl = gsap.timeline({ paused: true });
 
-    /* ════════════════════════════════════════════════════════════
-       S1 — UTKARSH SOLANKI  |  0.0 → 1.0s
-    ════════════════════════════════════════════════════════════ */
-    // Opening flash — white slam that burns to reveal the scene
-    // Opening flash — warm gold wash, not searing white
+    /* ════════════════════════════════════════
+       S1 — UTKARSH SOLANKI  |  0.0 → 0.8s
+    ════════════════════════════════════════ */
     tl.set("#flash", { opacity: 0.5 }, 0);
-    tl.to("#flash", { opacity: 0, duration: 0.55, ease: "power2.out", overwrite: "auto" }, 0.08);
+    tl.to("#flash", { opacity: 0, duration: 0.4, ease: "power2.out", overwrite: "auto" }, 0.05);
 
-    // Base stripe grows from left
-    tl.from("#s1-bar",  { scaleX: 0, transformOrigin: "left center", duration: 0.45, ease: "power4.out" }, 0.1);
-    tl.from("#s1-bar2", { scaleX: 0, transformOrigin: "left center", duration: 0.35, ease: "expo.out"   }, 0.2);
+    tl.from("#s1-bar",  { scaleX: 0, transformOrigin: "left center", duration: 0.35, ease: "power4.out" }, 0.05);
+    tl.from("#s1-bar2", { scaleX: 0, transformOrigin: "left center", duration: 0.25, ease: "expo.out"   }, 0.1);
+    tl.from("#s1-warning", { y: -20, opacity: 0, duration: 0.2, ease: "power4.out" }, 0.1);
+    tl.from("#s1-name", { y: 60, opacity: 0, scale: 1.04, duration: 0.3, ease: "back.out(1.5)" }, 0.15);
 
-    // Warning label drops in
-    tl.from("#s1-warning", { y: -28, opacity: 0, duration: 0.22, ease: "power4.out" }, 0.18);
+    /* ════════════════════════════════════════
+       TRANSITION 1→2  |  T=0.8s
+    ════════════════════════════════════════ */
+    var T1 = 0.8;
+    tl.to("#s1", { opacity: 0, duration: 0.2, ease: "power2.inOut" }, T1);
+    tl.set("#s2", { opacity: 1 }, T1);
+    tl.fromTo("#glitch-g", { opacity: 0.3 }, { opacity: 0, duration: 0.1, ease: "steps(2)" }, T1);
 
-    // Name SLAMS from below (hero entrance)
-    tl.from("#s1-name", { y: 90, opacity: 0, scale: 1.06, duration: 0.32, ease: "back.out(1.5)" }, 0.28);
+    /* ════════════════════════════════════════
+       S2 — FULL STACK ENGINEER  |  0.8 → 1.8s
+    ════════════════════════════════════════ */
+    tl.from("#s2-codebg", { opacity: 0, duration: 0.3,  ease: "power2.out" }, T1 + 0.05);
+    tl.to("#s2-codebg",   { y: "-15%", duration: 1.2,  ease: "none"       }, T1);
+    tl.from("#s2-glow",   { scale: 0.4, opacity: 0, duration: 0.5, ease: "sine.out" }, T1 + 0.05);
+    tl.from("#s2-lbl",    { x: -30, opacity: 0, duration: 0.2, ease: "expo.out"     }, T1 + 0.1);
+    tl.from("#s2-title",  { y: 40,  opacity: 0, scale: 0.96, duration: 0.35, ease: "back.out(1.4)" }, T1 + 0.15);
+    tl.from("#s2-sub",    { x: 30,  opacity: 0, duration: 0.25, ease: "power3.out"  }, T1 + 0.3);
 
-    // Subtle glow pulse on the name — no harsh RGB split
-    tl.to("#s1-name", {
-      textShadow: "0 0 90px rgba(212,175,55,0.7), 0 0 200px rgba(212,175,55,0.35)",
-      duration: 0.25, ease: "sine.inOut"
-    }, 0.6);
-    tl.to("#s1-name", {
-      textShadow: "0 0 60px rgba(212,175,55,0.5), 0 0 140px rgba(212,175,55,0.25)",
-      duration: 0.2, ease: "sine.inOut"
-    }, 0.85);
+    /* ════════════════════════════════════════
+       TRANSITION 2→3  |  T=1.8s
+    ════════════════════════════════════════ */
+    var T2 = 1.8;
+    tl.to("#flash", { opacity: 0.4, duration: 0.12, ease: "power3.in", overwrite: "auto" }, T2 - 0.12);
+    tl.set("#s3",    { opacity: 1 }, T2);
+    tl.set("#s2",    { opacity: 0 }, T2);
+    tl.to("#flash",  { opacity: 0, duration: 0.3, ease: "power2.out", overwrite: "auto" }, T2);
 
-    /* ════════════════════════════════════════════════════════════
-       TRANSITION 1→2  |  T=1.0s  |  Glitch (0.15s)
-    ════════════════════════════════════════════════════════════ */
-    var T1 = 1.0;
-    // Blur crossfade: gentle transition
-    tl.to("#s1", { filter: "blur(8px)", opacity: 0, duration: 0.4, ease: "power2.inOut" }, T1);
-    tl.set("#s2", { opacity: 1, filter: "blur(8px)" }, T1);
-    tl.to("#s2", { filter: "blur(0px)", duration: 0.35, ease: "power2.out" }, T1 + 0.1);
+    /* ════════════════════════════════════════
+       S3 — THE MAIN EVENT  |  1.8 → 2.8s
+    ════════════════════════════════════════ */
+    tl.from("#s3-spot",   { scale: 0.25, opacity: 0, duration: 0.5, ease: "power2.out"  }, T2 + 0.05);
+    tl.from("#s3-ropes",  { opacity: 0, y: 30,       duration: 0.4, ease: "power2.out"  }, T2 + 0.1);
+    tl.from("#s3-lbl",    { y: -15, opacity: 0,      duration: 0.2, ease: "power4.out"  }, T2 + 0.15);
+    tl.from("#s3-title",  { scale: 1.2, opacity: 0,  duration: 0.4, ease: "expo.out"    }, T2 + 0.2);
+    tl.from("#s3-sub",    { y: 20, opacity: 0,       duration: 0.3, ease: "sine.out"    }, T2 + 0.4);
 
-    /* ════════════════════════════════════════════════════════════
-       S2 — FULL STACK ENGINEER  |  1.0 → 3.0s
-    ════════════════════════════════════════════════════════════ */
-    tl.from("#s2-codebg", { opacity: 0, duration: 0.5,  ease: "power2.out" }, T1 + 0.15);
-    // Code scrolls upward continuously over the 2s window
-    tl.to("#s2-codebg",   { y: "-30%", duration: 2.2,  ease: "none"       }, T1 + 0.1);
-    tl.from("#s2-glow",   { scale: 0.4, opacity: 0, duration: 0.7, ease: "sine.out" }, T1 + 0.12);
+    /* ════════════════════════════════════════
+       TRANSITION 3→4  |  T=2.8s
+    ════════════════════════════════════════ */
+    var T3 = 2.8;
+    tl.set("#s4",       { opacity: 1 }, T3);
+    tl.set("#glitch-r", { opacity: 0.5, x: -10, y: 2 }, T3);
+    tl.set("#s3",       { opacity: 0 }, T3 + 0.1);
+    tl.to("#glitch-r", { opacity: 0, x: 0, duration: 0.15, ease: "power2.out" }, T3 + 0.1);
 
-    tl.from("#s2-lbl",    { x: -40, opacity: 0, duration: 0.28, ease: "expo.out"     }, T1 + 0.22);
-    tl.from("#s2-title",  { y: 65,  opacity: 0, scale: 0.94, duration: 0.48, ease: "back.out(1.4)" }, T1 + 0.32);
-    tl.from("#s2-sub",    { x: 45,  opacity: 0, duration: 0.32, ease: "power3.out"  }, T1 + 0.55);
-
-    /* ════════════════════════════════════════════════════════════
-       TRANSITION 2→3  |  T=3.0s  |  Overexposure flash
-    ════════════════════════════════════════════════════════════ */
-    var T2 = 3.0;
-    // Soft gold flash — not blinding
-    tl.to("#flash", { opacity: 0.45, duration: 0.18, ease: "power3.in", overwrite: "auto" }, T2 - 0.18);
-    tl.set("#s3",    { opacity: 1 },                                        T2);
-    tl.set("#s2",    { opacity: 0 },                                        T2);
-    tl.to("#flash",  { opacity: 0, duration: 0.45, ease: "power2.out", overwrite: "auto" },    T2);
-
-    /* ════════════════════════════════════════════════════════════
-       S3 — THE MAIN EVENT  |  3.0 → 5.0s
-    ════════════════════════════════════════════════════════════ */
-    tl.from("#s3-spot",   { scale: 0.25, opacity: 0, duration: 0.75, ease: "power2.out"  }, T2 + 0.1);
-    tl.from("#s3-ropes",  { opacity: 0, y: 50,       duration: 0.6,  ease: "power2.out"  }, T2 + 0.18);
-    tl.from("#s3-lbl",    { y: -22, opacity: 0,      duration: 0.27, ease: "power4.out"  }, T2 + 0.22);
-    tl.from("#s3-title",  { scale: 1.28, opacity: 0, duration: 0.52, ease: "expo.out"    }, T2 + 0.3);
-    tl.from("#s3-sub",    { y: 35, opacity: 0,       duration: 0.38, ease: "sine.out"    }, T2 + 0.62);
-
-    /* ════════════════════════════════════════════════════════════
-       TRANSITION 3→4  |  T=5.0s  |  Glitch
-    ════════════════════════════════════════════════════════════ */
-    var T3 = 5.0;
-    // Gentle glitch: reduced offsets, subtle warm overlays
-    tl.set("#s4",       { opacity: 1 },             T3);
-    tl.set("#glitch-r", { opacity: 0.6, x: -14, y:  3 }, T3);
-    tl.to("#s3", { x: 10,  duration: 0.06, ease: "none", overwrite: "auto" }, T3);
-    tl.to("#s3", { x: -6,  duration: 0.06, ease: "none", overwrite: "auto" }, T3 + 0.06);
-    tl.set("#s3", { opacity: 0, x: 0 }, T3 + 0.14);
-    tl.to("#glitch-r", { opacity: 0, x: 0, duration: 0.2, ease: "power2.out", overwrite: "auto" }, T3 + 0.14);
-
-    /* ════════════════════════════════════════════════════════════
-       S4 — BUILT TO LAST  |  5.0 → 7.0s
-    ════════════════════════════════════════════════════════════ */
-    tl.from("#s4-lbl",   { x: -35, opacity: 0, duration: 0.26, ease: "power4.out"   }, T3 + 0.18);
-    tl.from("#s4-title", { x: -65, opacity: 0, duration: 0.42, ease: "expo.out"     }, T3 + 0.26);
-    tl.from("#s4-glowR", { scale: 0, opacity: 0, duration: 0.8, ease: "power2.out"  }, T3 + 0.1);
-    // Badge stagger — each slams up individually
+    /* ════════════════════════════════════════
+       S4 — BUILT TO LAST  |  2.8 → 3.8s
+    ════════════════════════════════════════ */
+    tl.from("#s4-lbl",   { x: -25, opacity: 0, duration: 0.2, ease: "power4.out"   }, T3 + 0.1);
+    tl.from("#s4-title", { x: -40, opacity: 0, duration: 0.3, ease: "expo.out"     }, T3 + 0.15);
+    tl.from("#s4-glowR", { scale: 0, opacity: 0, duration: 0.6, ease: "power2.out"  }, T3 + 0.05);
     var badgeIDs = ["#b-nextjs","#b-rn","#b-three","#b-node","#b-ts"];
     badgeIDs.forEach(function(id, i) {
-      tl.from(id, { y: 44, opacity: 0, scale: 0.82, duration: 0.3, ease: "back.out(1.7)" }, T3 + 0.38 + i * 0.1);
+      tl.from(id, { y: 30, opacity: 0, scale: 0.85, duration: 0.25, ease: "back.out(1.7)" }, T3 + 0.2 + i * 0.08);
     });
 
-    /* ════════════════════════════════════════════════════════════
-       TRANSITION 4→5  |  T=7.0s  |  Flash
-    ════════════════════════════════════════════════════════════ */
-    var T4 = 7.0;
-    // Soft gold wash transition
-    tl.to("#flash", { opacity: 0.35, duration: 0.14, ease: "power3.in", overwrite: "auto" }, T4 - 0.14);
+    /* ════════════════════════════════════════
+       TRANSITION 4→5  |  T=3.8s
+    ════════════════════════════════════════ */
+    var T4 = 3.8;
+    tl.to("#flash", { opacity: 0.3, duration: 0.1, ease: "power3.in" }, T4 - 0.1);
     tl.set("#s5", { opacity: 1 }, T4);
     tl.set("#s4", { opacity: 0 }, T4);
-    tl.to("#flash", { opacity: 0, duration: 0.35, ease: "power2.out", overwrite: "auto" }, T4);
+    tl.to("#flash", { opacity: 0, duration: 0.25, ease: "power2.out" }, T4);
 
-    /* ════════════════════════════════════════════════════════════
-       S5 — 99 OVR ATTITUDE  |  7.0 → 9.0s
-    ════════════════════════════════════════════════════════════ */
-    tl.from("#s5-lbl", { x: -32, opacity: 0, duration: 0.26, ease: "power3.out"    }, T4 + 0.16);
-    tl.from("#s5-num", { scale: 1.45, opacity: 0, duration: 0.42, ease: "expo.out" }, T4 + 0.22);
-    tl.from("#s5-ovr", { y: 30, opacity: 0,  duration: 0.3,  ease: "back.out(1.3)" }, T4 + 0.42);
-    tl.fromTo("#s5-bars", { x: 85, opacity: 0, yPercent: -50 }, { x: 0, opacity: 1, yPercent: -50, duration: 0.38, ease: "power3.out" }, T4 + 0.32);
-    // Bar fills — each animates to its value width
-    tl.to("#bf1", { width: "92%", duration: 0.62, ease: "power2.out" }, T4 + 0.52);
-    tl.to("#bf2", { width: "88%", duration: 0.62, ease: "power2.out" }, T4 + 0.62);
-    tl.to("#bf3", { width: "82%", duration: 0.62, ease: "power2.out" }, T4 + 0.72);
-    tl.to("#bf4", { width: "79%", duration: 0.62, ease: "power2.out" }, T4 + 0.82);
-    tl.to("#bf5", { width: "75%", duration: 0.62, ease: "power2.out" }, T4 + 0.92);
+    /* ════════════════════════════════════════
+       S5 — 99 OVR ATTITUDE  |  3.8 → 4.8s
+    ════════════════════════════════════════ */
+    tl.from("#s5-lbl", { x: -25, opacity: 0, duration: 0.2, ease: "power3.out"    }, T4 + 0.1);
+    tl.from("#s5-num", { scale: 1.3, opacity: 0, duration: 0.35, ease: "expo.out" }, T4 + 0.15);
+    tl.from("#s5-ovr", { y: 20, opacity: 0,  duration: 0.25,  ease: "back.out(1.3)" }, T4 + 0.3);
+    tl.fromTo("#s5-bars", { x: 60, opacity: 0, yPercent: -50 }, { x: 0, opacity: 1, yPercent: -50, duration: 0.3, ease: "power3.out" }, T4 + 0.2);
+    tl.to("#bf1", { width: "92%", duration: 0.4, ease: "power2.out" }, T4 + 0.4);
+    tl.to("#bf2", { width: "88%", duration: 0.4, ease: "power2.out" }, T4 + 0.45);
+    tl.to("#bf3", { width: "82%", duration: 0.4, ease: "power2.out" }, T4 + 0.5);
+    tl.to("#bf4", { width: "79%", duration: 0.4, ease: "power2.out" }, T4 + 0.55);
+    tl.to("#bf5", { width: "75%", duration: 0.4, ease: "power2.out" }, T4 + 0.6);
 
-    /* ════════════════════════════════════════════════════════════
-       TRANSITION 5→6  |  T=9.0s  |  Glitch
-    ════════════════════════════════════════════════════════════ */
-    var T5 = 9.0;
-    // Blur crossfade — smooth and cinematic
-    tl.to("#s5", { filter: "blur(6px)", opacity: 0, duration: 0.38, ease: "power2.inOut" }, T5);
-    tl.set("#s6", { opacity: 1, filter: "blur(6px)" }, T5);
-    tl.to("#s6", { filter: "blur(0px)", duration: 0.3, ease: "power2.out" }, T5 + 0.1);
+    /* ════════════════════════════════════════
+       TRANSITION 5→6  |  T=4.8s
+    ════════════════════════════════════════ */
+    var T5 = 4.8;
+    tl.to("#s5", { opacity: 0, duration: 0.25, ease: "power2.inOut" }, T5);
+    tl.set("#s6", { opacity: 1 }, T5);
 
-    /* ════════════════════════════════════════════════════════════
-       S6 — VERSATILE. RELENTLESS.  |  9.0 → 11.0s
-    ════════════════════════════════════════════════════════════ */
-    tl.from("#s6-lbl",   { x: -35, opacity: 0, duration: 0.26, ease: "power4.out"   }, T5 + 0.2);
-    tl.from("#s6-title", { y: 55, opacity: 0, duration: 0.46,  ease: "back.out(1.3)" }, T5 + 0.3);
-    tl.from("#s6-sub",   { x: 48, opacity: 0, duration: 0.32,  ease: "expo.out"     }, T5 + 0.52);
-    // Belt stagger
+    /* ════════════════════════════════════════
+       S6 — VERSATILE. RELENTLESS.  |  4.8 → 5.8s
+    ════════════════════════════════════════ */
+    tl.from("#s6-lbl",   { x: -25, opacity: 0, duration: 0.2, ease: "power4.out"   }, T5 + 0.15);
+    tl.from("#s6-title", { y: 40, opacity: 0, duration: 0.35,  ease: "back.out(1.3)" }, T5 + 0.2);
+    tl.from("#s6-sub",   { x: 30, opacity: 0, duration: 0.25,  ease: "expo.out"     }, T5 + 0.35);
     var beltIDs = ["#bl-fs","#bl-mb","#bl-3d","#bl-ai"];
     beltIDs.forEach(function(id, i) {
-      tl.from(id, { y: 32, scaleX: 0.55, opacity: 0, duration: 0.36, ease: "back.out(1.9)" }, T5 + 0.58 + i * 0.12);
+      tl.from(id, { y: 20, scaleX: 0.7, opacity: 0, duration: 0.25, ease: "back.out(1.9)" }, T5 + 0.4 + i * 0.08);
     });
 
-    /* ════════════════════════════════════════════════════════════
-       TRANSITION 6→7  |  T=11.0s  |  Overexposure (hero reveal)
-    ════════════════════════════════════════════════════════════ */
-    var T6 = 11.0;
-    // Final reveal — soft gold bloom, the biggest one
-    tl.to("#flash", { opacity: 0.55, duration: 0.2, ease: "power3.in", overwrite: "auto" }, T6 - 0.2);
-    tl.set("#s7",   { opacity: 1 },                                     T6);
-    tl.set("#s6",   { opacity: 0 },                                     T6);
-    tl.to("#flash", { opacity: 0, duration: 0.5, ease: "power2.out", overwrite: "auto" }, T6);
+    /* ════════════════════════════════════════
+       TRANSITION 6→7  |  T=5.8s
+    ════════════════════════════════════════ */
+    var T6 = 5.8;
+    tl.to("#flash", { opacity: 0.5, duration: 0.15, ease: "power3.in" }, T6 - 0.15);
+    tl.set("#s7",   { opacity: 1 }, T6);
+    tl.set("#s6",   { opacity: 0 }, T6);
+    tl.to("#flash", { opacity: 0, duration: 0.4, ease: "power2.out" }, T6);
 
-    /* ════════════════════════════════════════════════════════════
-       S7 — ENTER THE ARENA  |  11.0 → 12.0s
-    ════════════════════════════════════════════════════════════ */
-    tl.from("#s7-glow",     { scale: 0.2, opacity: 0, duration: 0.6, ease: "power2.out"  }, T6 + 0.2);
-    tl.from("#s7-monogram", { opacity: 0, scale: 2.2, duration: 0.5, ease: "power3.out"  }, T6 + 0.22);
-    tl.from("#s7-eyebrow",  { y: -22, opacity: 0,     duration: 0.3, ease: "expo.out"    }, T6 + 0.28);
-    tl.from("#s7-cta",      { scale: 0.76, opacity: 0, duration: 0.52, ease: "expo.out"  }, T6 + 0.34);
-    tl.from("#s7-sub",      { y: 24, opacity: 0,      duration: 0.34, ease: "sine.out"   }, T6 + 0.58);
+    /* ════════════════════════════════════════
+       S7 — ENTER THE ARENA  |  5.8 → 6.8s
+    ════════════════════════════════════════ */
+    tl.from("#s7-glow",     { scale: 0.2, opacity: 0, duration: 0.5, ease: "power2.out"  }, T6 + 0.15);
+    tl.from("#s7-monogram", { opacity: 0, scale: 1.8, duration: 0.4, ease: "power3.out"  }, T6 + 0.15);
+    tl.from("#s7-eyebrow",  { y: -15, opacity: 0,     duration: 0.25, ease: "expo.out"    }, T6 + 0.2);
+    tl.from("#s7-cta",      { scale: 0.8, opacity: 0, duration: 0.4, ease: "expo.out"    }, T6 + 0.25);
+    tl.from("#s7-sub",      { y: 15, opacity: 0,      duration: 0.3, ease: "sine.out"    }, T6 + 0.45);
 
-    // FINAL scene exit — fade to black. Only allowed on last scene.
-    tl.to("#s7", { opacity: 0, duration: 0.45, ease: "power2.in" }, 11.55);
+    tl.to("#s7", { opacity: 0, duration: 0.4, ease: "power2.in" }, 6.4);
 
-    // Register with HyperFrames — the player drives playback when rendering
     window.__timelines["intro-promo"] = tl;
 
-    // ── Standalone / iframe auto-play (not running under HF render engine) ──
     if (typeof window.__hyperframesPlayer === "undefined") {
       tl.play();
-      // Notify parent window (IntroPromo.tsx) that the promo has finished
       tl.eventCallback("onComplete", function() {
         try { window.parent.postMessage({ type: "PROMO_COMPLETE" }, "*"); } catch(e) {}
       });

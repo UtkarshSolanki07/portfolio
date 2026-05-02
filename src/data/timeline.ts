@@ -28,28 +28,15 @@ export const timeline: Milestone[] = [
     type: 'work',
   },
   {
-    year: '2023',
-    title: 'MERN Stack Mastery',
-    description:
-      'Went full send on MongoDB, Express, React, Node.js. Built multiple production apps.',
-    type: 'achievement',
-  },
-  {
-    year: '2024',
+    year: '2026',
     title: 'Smart Exhibition App',
     description:
       'Main event push. Built a full-stack React Native + Node.js platform for exhibition management.',
     type: 'project',
   },
+  
   {
-    year: '2024',
-    title: 'AI Tools Platform',
-    description:
-      'Stepped into the AI ring. Prompt chaining, document analysis, multi-model support.',
-    type: 'project',
-  },
-  {
-    year: '2025',
+    year: '2026',
     title: 'MAIN EVENT Portfolio',
     description:
       'The magnum opus. A wrestling-themed 3D portfolio that breaks the fourth wall.',
