@@ -16,15 +16,53 @@ export interface Project {
 
 export const projects: Project[] = [
   {
-    slug: 'smart-exhibition-app',
+    slug: 'botzilla-website',
     tier: 'main-event',
-    title: 'Smart Exhibition App',
+    title: 'BotZilla',
     matchLabel: 'MAIN EVENT · TITLE MATCH',
+    opponent: 'BOTZILLA',
+    description:
+      'Cut my music! You\'re looking at the undisputed heavyweight champion of AI research platforms. Real-time web search. Deep multi-modal analysis. Real AI research. Cry me a river if your current tools can\'t keep up.',
+    longDescription:
+      'Look at this architecture and tell me I\'m not the best in the world. Next.js 15 on the App Router, Clerk for iron-clad security, and a Supabase backend that hits harder than a Strong Style lariat in the Tokyo Dome. This isn\'t some cheap backyard gimmick; this is an AI-powered search and research machine designed to tear through data and synthesize knowledge in real-time.\n\nYou want deep research mode? We got it. You need automated citation generation? It\'s locked in the center of the ring. With Trigger handling background processing like a true ring general and Nemotron 3 Super pulling the strings, BotZilla processes complex multi-modal queries before you even realize the bell rang. We didn\'t just set the bar; we broke it over our knee. I\'m better than your average dev, and you know it.',
+    screenshots: [
+      '/images/projects/botzilla/1.png',
+    ],
+    stack: ['Next.js 15', 'React 18', 'Supabase', 'Clerk', 'Trigger', 'TailwindCSS'],
+    features: ['Multi-Modal Search', 'Deep Research Mode', 'Automated Citations', 'Background Processing'],
+    stats: { platforms: 1, features: 12, linesOfCode: 6500 },
+    github: '',
+    live: '',
+  },
+  {
+    slug: 'convo-website',
+    tier: 'featured',
+    title: 'Convo',
+    matchLabel: 'FEATURED · NO DQ',
+    opponent: 'CONVO APP',
+    description:
+      'You think your chat app is elite? Convo is the excellence of execution in real-time communication. Instant WebSockets, zero latency, and live typing status—it\'s the Best There Is, the Best There Was, and the Best There Ever Will Be.',
+    longDescription:
+      'Listen up, marks. When you need real-time communication, you don\'t rely on some jabroni HTTP polling architecture. Convo runs on pure WebSockets, Node.js, and Express to deliver instant messaging with the ruthless aggression of a prime Attitude Era main event.\n\nWe\'re talking group chats, live typing indicators, and a React frontend so smooth it makes a flawless moonsault look sloppy. The backend orchestration ensures low-latency message delivery, keeping the conversation flowing without a single botch. It\'s not just another chat app—it\'s a certified, undisputed paradigm shift in how we build real-time systems.',
+    screenshots: [
+      '/images/projects/convo/1.png',
+    ],
+    stack: ['React', 'Node.js', 'WebSockets', 'Express'],
+    features: ['Real-time Messaging', 'Live Status', 'Group Chats', 'Zero Latency'],
+    stats: { platforms: 1, features: 8, linesOfCode: 5100 },
+    github: '',
+    live: '',
+  },
+  {
+    slug: 'smart-exhibition-app',
+    tier: 'undercard',
+    title: 'Smart Exhibition App',
+    matchLabel: 'UNDERCARD · LADDER MATCH',
     opponent: 'SMART EXHIBITION APP',
     description:
-      'Full-stack React Native + Node.js platform replacing paper-based exhibition management. Real-time QR scanning, visitor analytics, exhibitor dashboards.',
+      'Listen up: this is a full-stack React Native + Node.js platform that drags paper-based exhibition management into the modern era. Real-time QR scanning, visitor analytics, and exhibitor dashboards keep the crowd moving and the data honest.',
     longDescription:
-      'A complete digital transformation of the exhibition management workflow. This full-stack platform replaces paper-based badge systems, manual visitor tracking, and scattered exhibitor communications with a unified real-time solution.\n\nThe system spans three platforms — a Visitor mobile app with QR-based check-in and interactive floor maps, an Exhibitor dashboard with real-time foot traffic analytics and lead capture, and an Admin panel for event orchestration. Built with React Native for cross-platform mobile delivery, backed by a Node.js/Express API layer and MongoDB for flexible document storage.\n\nKey engineering challenges included real-time WebSocket sync across 500+ concurrent visitors, offline-first QR scanning with background sync, and a role-based permission system spanning three distinct user types.',
+      'If you’ve ever watched an event turn into a backstage scramble — paper badges, manual check-ins, scattered exhibitor comms — this is the system that restores order before the bell. It replaces the chaos with a unified real-time platform built for actual event pressure.\n\nThe card is split into three clean roles: a Visitor mobile app with QR check-in and interactive floor maps, an Exhibitor dashboard with live foot-traffic analytics and lead capture, and an Admin panel for event orchestration. React Native handles the mobile side, while Node.js/Express and MongoDB form the backend that keeps everything synced.\n\nThe real work is under the lights: WebSocket sync across 500+ concurrent visitors, offline-first QR scanning with background sync, and role-based permissions across three user types. No cheap-pop gimmick — just strong-style engineering with enough ECW grit to keep the arena from collapsing.',
     screenshots: [
       '/images/projects/smart-exhibition/1.png',
       '/images/projects/smart-exhibition/2.png',
@@ -39,75 +77,6 @@ export const projects: Project[] = [
       'Admin Panel',
     ],
     stats: { platforms: 3, features: 12, linesOfCode: 8400 },
-    github: '',
-    live: '',
-  },
-  {
-    slug: 'ai-tools-platform',
-    tier: 'featured',
-    title: 'AI Tools Platform',
-    matchLabel: 'FEATURED · NO DQ',
-    opponent: 'AI TOOLS PLATFORM',
-    description:
-      'AI-powered productivity toolkit. Prompt chaining, document analysis, code review automation.',
-    longDescription:
-      'An AI-powered productivity toolkit designed to chain multiple LLM operations into repeatable workflows. The platform supports prompt chaining, document analysis with extraction pipelines, and automated code review with configurable rulesets.\n\nBuilt on Next.js with a Python/FastAPI backend for heavy AI processing. The architecture separates the orchestration layer (prompt chains, scheduling) from the execution layer (model calls, embeddings, vector search), allowing hot-swapping between OpenAI, Anthropic, and local models without workflow changes.\n\nThe code review module parses diffs, applies semantic analysis, and produces structured feedback with severity ratings — reducing review turnaround by roughly 60% in internal testing.',
-    screenshots: [
-      '/images/projects/ai-tools-platform/1.png',
-      '/images/projects/ai-tools-platform/2.png',
-    ],
-    stack: ['Next.js', 'OpenAI API', 'Python', 'FastAPI'],
-    features: [
-      'Prompt Chaining',
-      'Document Analysis',
-      'Code Review',
-      'Multi-model Support',
-    ],
-    stats: { platforms: 1, features: 8, linesOfCode: 4200 },
-    github: '',
-    live: '',
-  },
-  {
-    slug: 'ezybuilds-dashboard',
-    tier: 'undercard',
-    title: 'EzyBuilds Dashboard',
-    matchLabel: 'UNDERCARD · LADDER MATCH',
-    opponent: 'EZYBUILDS DASHBOARD',
-    description:
-      'Internal analytics and project management dashboard built during internship at EzyBuilds.',
-    longDescription:
-      'An internal analytics and project management dashboard built during my internship at EzyBuilds. The platform consolidates scattered project data into a single command center with real-time KPI tracking, team workload visualization, and automated report generation.\n\nThe dashboard features interactive Chart.js visualizations for sprint velocity, resource allocation, and project health metrics. A custom drag-and-drop Kanban board handles task lifecycle management with status-based filtering and deadline alerts.\n\nBuilt with React and TailwindCSS for rapid iteration, connected to internal REST APIs. The reporting module generates PDF exports with configurable date ranges and metric selections, used weekly by the management team for stakeholder updates.',
-    screenshots: [
-      '/images/projects/ezybuilds-dashboard/1.png',
-      '/images/projects/ezybuilds-dashboard/2.png',
-    ],
-    stack: ['React', 'TailwindCSS', 'REST API', 'Chart.js'],
-    features: [
-      'Analytics Dashboard',
-      'Project Tracking',
-      'Team Management',
-      'Reports',
-    ],
-    stats: { platforms: 1, features: 6, linesOfCode: 2800 },
-    github: '',
-    live: '',
-  },
-  {
-    slug: 'portfolio-v1',
-    tier: 'dark-match',
-    title: 'Portfolio v1',
-    matchLabel: 'DARK MATCH · PRE-SHOW',
-    opponent: 'PORTFOLIO V1',
-    description:
-      'The original portfolio. It served its purpose. Many regrets. Zero survivors.',
-    longDescription:
-      'The original portfolio website — a humble beginning built with raw HTML, CSS, and GSAP animations. It was simple. It was honest. It got the job done.\n\nLooking back, it represented the early days of learning web development — hand-writing every animation, fighting CSS specificity wars, and discovering that "it works on my machine" is not a deployment strategy.\n\nIt has since been retired with full honors, replaced by the wrestling-themed arena experience you\'re currently standing in. Rest in peace, Portfolio v1. You will be remembered. Mostly with cringe.',
-    screenshots: [
-      '/images/projects/portfolio-v1/1.png',
-    ],
-    stack: ['HTML', 'CSS', 'GSAP', 'Many Regrets'],
-    features: ['It existed', 'It got the job done', 'It is now retired'],
-    stats: { platforms: 1, features: 3 },
     github: '',
     live: '',
   },

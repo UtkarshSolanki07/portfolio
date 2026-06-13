@@ -31,25 +31,51 @@ const bebasNeue = Bebas_Neue({
 });
 
 export const metadata: Metadata = {
-  title: "MAIN EVENT | Utkarsh Solanki — Full Stack Engineer",
+  metadataBase: new URL("https://portfolio-livid-three-99.vercel.app/"),
+  title: "Utkarsh Solanki | Full Stack Software Engineer",
   description:
-    "The wrestling-game-themed interactive portfolio of Utkarsh Solanki. A cinematic, game-UI-driven experience showcasing full stack engineering projects.",
+    "The official portfolio of Utkarsh Solanki, a Full Stack Developer specializing in React, Next.js, and Node.js. Experience my interactive, wrestling-game-themed engineering showcase.",
   keywords: [
     "Utkarsh Solanki",
+    "Utkarsh Solanki Portfolio",
+    "Utkarsh Solanki Developer",
     "Full Stack Developer",
-    "Portfolio",
-    "React",
+    "Software Engineer",
+    "React Developer",
     "Next.js",
-    "React Native",
-    "MERN Stack",
-    "Wrestling Portfolio",
+    "Node.js",
   ],
-  authors: [{ name: "Utkarsh Solanki" }],
+  authors: [{ name: "Utkarsh Solanki", url: "https://portfolio-livid-three-99.vercel.app/" }],
+  creator: "Utkarsh Solanki",
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
-    title: "MAIN EVENT | Utkarsh Solanki",
-    description: "Welcome to the Main Event. A wrestling-themed developer portfolio.",
+    title: "Utkarsh Solanki | Full Stack Engineer",
+    description: "Welcome to the Main Event. The interactive developer portfolio of Utkarsh Solanki.",
+    url: "https://portfolio-livid-three-99.vercel.app/",
+    siteName: "Utkarsh Solanki Portfolio",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Utkarsh Solanki | Full Stack Engineer",
+    description: "Interactive developer portfolio of Utkarsh Solanki. Step into the ring.",
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Utkarsh Solanki",
+  url: "https://portfolio-livid-three-99.vercel.app/",
+  jobTitle: "Full Stack Software Engineer",
+  knowsAbout: ["Web Development", "React", "Next.js", "Node.js", "TypeScript", "MERN Stack"],
+  sameAs: [
+    // Provide your social links here if available (e.g. LinkedIn, GitHub)
+    // "https://github.com/yourusername",
+    // "https://linkedin.com/in/yourusername"
+  ]
 };
 
 export default function RootLayout({
@@ -59,6 +85,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body
         className={`${barlowCondensed.variable} ${rajdhani.variable} ${shareTechMono.variable} ${bebasNeue.variable}`}
         style={{
