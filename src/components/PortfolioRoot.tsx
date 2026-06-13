@@ -18,6 +18,7 @@ import { AvatarSlamSVG, RingSVG } from '@/components/ui/WrestlingIcons'
 import PipebombOverlay from '@/components/easter-eggs/PipebombOverlay'
 import FrenzyDetector from '@/components/easter-eggs/FrenzyDetector'
 import { useArenaAudio } from '@/hooks/useArenaAudio'
+import { Howler } from 'howler'
 import { useKonamiCode } from '@/hooks/useKonamiCode'
 import { usePipebomb } from '@/hooks/usePipebomb'
 import { projects } from '@/data/projects'
@@ -174,7 +175,17 @@ function PortfolioContent() {
 
   return (
     <>
-      <LoadingScreen />
+      <LoadingScreen onEnter={() => {
+        // Unlock Howler AudioContext and play the entrance theme
+        try {
+          if (Howler.ctx) {
+            Howler.ctx.resume()
+          }
+        } catch (e) {
+          console.warn(e)
+        }
+        playSound('theme')
+      }} />
       <PipebombOverlay
         isVisible={showPipebomb}
         onClose={() => setShowPipebomb(false)}

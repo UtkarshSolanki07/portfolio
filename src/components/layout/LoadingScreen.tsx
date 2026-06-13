@@ -6,7 +6,11 @@ import { loadingTips } from '@/data/loadingTips'
 import { usePortfolioStore } from '@/lib/store'
 import { AvatarSlamSVG } from '@/components/ui/WrestlingIcons'
 
-export default function LoadingScreen() {
+interface LoadingScreenProps {
+  onEnter?: () => void
+}
+
+export default function LoadingScreen({ onEnter }: LoadingScreenProps) {
   const { isLoading, setLoading, loadingProgress, setLoadingProgress } =
     usePortfolioStore()
   const [tipIndex, setTipIndex] = useState(0)
@@ -66,20 +70,11 @@ export default function LoadingScreen() {
     }
   }, [])
 
-  // Auto-dismiss after progress completes (reduces LCP by not requiring a click)
-  useEffect(() => {
-    if (loadingProgress >= 100) {
-      const autoDismiss = setTimeout(() => {
-        setLoading(false)
-      }, 800) // Brief pause at 100% before auto-enter
-      return () => clearTimeout(autoDismiss)
-    }
-  }, [loadingProgress, setLoading])
-
   // Manual dismiss (click anywhere or button)
   const handleDismiss = useCallback(() => {
     setLoading(false)
-  }, [setLoading])
+    if (onEnter) onEnter()
+  }, [setLoading, onEnter])
 
   return (
     <AnimatePresence>

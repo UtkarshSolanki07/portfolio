@@ -80,24 +80,38 @@ export function useArenaAudio() {
     Howler.mute(isMuted)
   }, [isMuted])
 
+  // Centralized helper to play a music track and stop all others
+  const playTrack = useCallback((key: 'theme' | 'bgm1' | 'bgm2') => {
+    const musicTracks: ('theme' | 'bgm1' | 'bgm2')[] = ['theme', 'bgm1', 'bgm2']
+    
+    // Stop all other music tracks unconditionally
+    musicTracks.forEach((trackKey) => {
+      if (trackKey !== key) {
+        const sound = sounds.current[trackKey]
+        if (sound) {
+          sound.stop()
+        }
+      }
+    })
+
+    activeTrackRef.current = key
+    
+    // Play the target track if it's not already playing
+    const targetSound = getSound(key)
+    if (targetSound && !targetSound.playing()) {
+      targetSound.play()
+    }
+  }, [getSound])
+
   // Central theme/BGM management
   useEffect(() => {
     if (isLoading) return // Do nothing while loading screen is active
 
     if (!hasSeenPromo) {
       // Intro promo is active -> play entrance theme
-      const theme = getSound('theme')
-      if (theme && !theme.playing()) {
-        theme.play()
-        activeTrackRef.current = 'theme'
-      }
+      playTrack('theme')
     } else {
       // Promo finished -> stop entrance theme, start alternating BGMs
-      const theme = sounds.current['theme']
-      if (theme?.playing()) {
-        theme.stop()
-      }
-
       const bgm1 = getSound('bgm1')
       const bgm2 = getSound('bgm2')
       if (!bgm1 || !bgm2) return
@@ -107,26 +121,26 @@ export function useArenaAudio() {
       bgm2.off('end')
 
       bgm1.on('end', () => {
-        activeTrackRef.current = 'bgm2'
-        bgm2.play()
+        playTrack('bgm2')
       })
 
       bgm2.on('end', () => {
-        activeTrackRef.current = 'bgm1'
-        bgm1.play()
+        playTrack('bgm1')
       })
 
-      // Start the loop with bgm1 if we just transitioned from theme
+      // Start the loop with bgm1 if we just transitioned from theme or have no active track
       if (activeTrackRef.current === 'theme' || !activeTrackRef.current) {
-        activeTrackRef.current = 'bgm1'
-      }
-
-      const activeSound = activeTrackRef.current === 'bgm1' ? bgm1 : bgm2
-      if (!activeSound.playing()) {
-        activeSound.play()
+        playTrack('bgm1')
+      } else {
+        // Ensure the active BGM track is playing if it should be
+        const currentKey = activeTrackRef.current
+        const activeSound = sounds.current[currentKey]
+        if (activeSound && !activeSound.playing() && !isMuted) {
+          activeSound.play()
+        }
       }
     }
-  }, [isLoading, hasSeenPromo, getSound])
+  }, [isLoading, hasSeenPromo, playTrack, getSound, isMuted])
 
   // Pause / Resume tracks when muting / unmuting, just in case browser autoplay policies complain on background tabs
   useEffect(() => {
@@ -135,8 +149,10 @@ export function useArenaAudio() {
     const sound = sounds.current[activeTrackRef.current]
     if (!sound) return
 
-    if (!isMuted && !isLoading && !sound.playing()) {
-      sound.play()
+    if (!isMuted && !isLoading) {
+      if (!sound.playing()) {
+        sound.play()
+      }
     } else if (isMuted && sound.playing()) {
       sound.pause()
     }
@@ -144,11 +160,15 @@ export function useArenaAudio() {
 
 
   const playSound = useCallback((key: string) => {
-    const sound = getSound(key)
-    if (sound && !sound.playing()) {
-      sound.play()
+    if (key === 'theme' || key === 'bgm1' || key === 'bgm2') {
+      playTrack(key)
+    } else {
+      const sound = getSound(key)
+      if (sound && !sound.playing()) {
+        sound.play()
+      }
     }
-  }, [getSound])
+  }, [getSound, playTrack])
 
   const stopSound = useCallback((key: string) => {
     const sound = sounds.current[key]
@@ -162,18 +182,10 @@ export function useArenaAudio() {
 
     const currentKey = activeTrackRef.current
     if (currentKey === 'bgm1' || currentKey === 'bgm2') {
-      const sound = sounds.current[currentKey]
-      if (sound) sound.stop()
-
       const nextKey = currentKey === 'bgm1' ? 'bgm2' : 'bgm1'
-      activeTrackRef.current = nextKey
-      
-      const nextSound = getSound(nextKey)
-      if (nextSound && !nextSound.playing()) {
-        nextSound.play()
-      }
+      playTrack(nextKey)
     }
-  }, [hasSeenPromo, getSound])
+  }, [hasSeenPromo, playTrack])
 
   return {
     playSound,
@@ -181,3 +193,4 @@ export function useArenaAudio() {
     nextTrack,
   }
 }
+
