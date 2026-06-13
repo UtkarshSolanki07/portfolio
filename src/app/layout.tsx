@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Barlow_Condensed, Rajdhani, Share_Tech_Mono, Bebas_Neue } from "next/font/google";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next"
 
 const barlowCondensed = Barlow_Condensed({
   variable: "--font-barlow",
@@ -102,6 +103,7 @@ export default function RootLayout({
           Skip to main content
         </a>
         {children}
+        <Analytics />
       </body>
     </html>
   );
