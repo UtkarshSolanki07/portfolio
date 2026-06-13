@@ -27,6 +27,10 @@ interface PortfolioState {
   activeMenuItem: number
   setActiveMenuItem: (index: number) => void
 
+  // Project Detail Overlay
+  selectedProject: string | null
+  setSelectedProject: (slug: string | null) => void
+
   // Audio
   isMuted: boolean
   toggleMute: () => void
@@ -74,6 +78,10 @@ export const usePortfolioStore = create<PortfolioState>((set) => ({
   // Menu
   activeMenuItem: 0,
   setActiveMenuItem: (index) => set({ activeMenuItem: index }),
+
+  // Project Detail Overlay
+  selectedProject: null,
+  setSelectedProject: (slug) => set({ selectedProject: slug }),
 
   // Audio
   isMuted: false,

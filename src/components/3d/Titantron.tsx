@@ -62,6 +62,24 @@ const TitantronMaterial = {
   `
 }
 
+function loadTexture(loader: THREE.TextureLoader, path: string): Promise<THREE.Texture> {
+  return new Promise<THREE.Texture>((resolve) => {
+    loader.load(
+      path,
+      (tex) => {
+        tex.minFilter = THREE.LinearFilter
+        tex.magFilter = THREE.LinearFilter
+        resolve(tex)
+      },
+      undefined,
+      () => {
+        console.warn(`Failed to load: ${path}`)
+        resolve(new THREE.Texture())
+      }
+    )
+  })
+}
+
 function TitantronScreen() {
   const [loadedTextures, setLoadedTextures] = useState<THREE.Texture[]>([])
   const materialRef = useRef<THREE.ShaderMaterial>(null)
@@ -76,26 +94,37 @@ function TitantronScreen() {
     uGlitch: { value: 0 },
   }), [])
 
+  // Lazy texture loading: first 2 immediately, rest after 5s
   useEffect(() => {
     const loader = new THREE.TextureLoader()
-    const promises = IMAGE_PATHS.map(path => 
-      new Promise<THREE.Texture>((resolve) => {
-        loader.load(
-          path,
-          (tex) => {
-            tex.minFilter = THREE.LinearFilter
-            tex.magFilter = THREE.LinearFilter
-            resolve(tex)
-          },
-          undefined,
-          () => {
-            console.warn(`Failed to load: ${path}`)
-            resolve(new THREE.Texture()) // Empty texture fallback
-          }
-        )
-      })
-    )
-    Promise.all(promises).then(setLoadedTextures)
+    let cancelled = false
+
+    // Load first 2 textures immediately
+    const initialPaths = IMAGE_PATHS.slice(0, 2)
+    Promise.all(initialPaths.map(p => loadTexture(loader, p))).then((initial) => {
+      if (cancelled) return
+      setLoadedTextures(initial)
+
+      // Load remaining textures after 5s
+      const timer = setTimeout(() => {
+        const remainingPaths = IMAGE_PATHS.slice(2)
+        Promise.all(remainingPaths.map(p => loadTexture(loader, p))).then((rest) => {
+          if (cancelled) return
+          setLoadedTextures(prev => [...prev, ...rest])
+        })
+      }, 5000)
+
+      // Store timer for cleanup
+      if (!cancelled) {
+        cleanupTimer = timer
+      }
+    })
+
+    let cleanupTimer: NodeJS.Timeout | undefined
+    return () => {
+      cancelled = true
+      if (cleanupTimer) clearTimeout(cleanupTimer)
+    }
   }, [])
 
   useFrame(({ clock }) => {

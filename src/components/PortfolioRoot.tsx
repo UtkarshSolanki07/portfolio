@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useCallback, useState, useRef } from 'react'
+import { useEffect, useCallback, useState, useRef, startTransition } from 'react'
 import dynamic from 'next/dynamic'
 import { motion, AnimatePresence } from 'framer-motion'
 import IntroPromo from '@/components/ui/IntroPromo'
@@ -9,6 +9,7 @@ import LoadingScreen from '@/components/layout/LoadingScreen'
 import StatCard from '@/components/ui/StatCard'
 import MenuPanel from '@/components/ui/MenuPanel'
 import MatchCard from '@/components/ui/MatchCard'
+import ProjectDetailOverlay from '@/components/ui/ProjectDetailOverlay'
 import SkillBelt from '@/components/ui/SkillBelt'
 import TimelineLocker from '@/components/ui/TimelineLocker'
 import CommentaryQuipDisplay, { useCommentaryQuip } from '@/components/ui/CommentaryQuip'
@@ -31,33 +32,54 @@ const Arena = dynamic(() => import('@/components/3d/Arena'), { ssr: false })
 const SECTIONS = ['entrance', 'matchcard', 'championships', 'backstage', 'contact']
 
 function PortfolioContent() {
-  const {
-    isLoading,
-    showPipebomb,
-    setShowPipebomb,
-    hardcoreMode,
-    toggleHardcoreMode,
-    incrementAttitude,
-    activeScene,
-    setActiveScene,
-    isMuted,
-    toggleMute,
-    hasSeenPromo,
-    setHasSeenPromo,
-  } = usePortfolioStore()
+  // Granular Zustand selectors — only re-render when the specific slice changes
+  const isLoading = usePortfolioStore(s => s.isLoading)
+  const showPipebomb = usePortfolioStore(s => s.showPipebomb)
+  const setShowPipebomb = usePortfolioStore(s => s.setShowPipebomb)
+  const hardcoreMode = usePortfolioStore(s => s.hardcoreMode)
+  const toggleHardcoreMode = usePortfolioStore(s => s.toggleHardcoreMode)
+  const incrementAttitude = usePortfolioStore(s => s.incrementAttitude)
+  const activeScene = usePortfolioStore(s => s.activeScene)
+  const setActiveScene = usePortfolioStore(s => s.setActiveScene)
+  const isMuted = usePortfolioStore(s => s.isMuted)
+  const toggleMute = usePortfolioStore(s => s.toggleMute)
+  const hasSeenPromo = usePortfolioStore(s => s.hasSeenPromo)
+  const setHasSeenPromo = usePortfolioStore(s => s.setHasSeenPromo)
+  const selectedProject = usePortfolioStore(s => s.selectedProject)
+  const setSelectedProject = usePortfolioStore(s => s.setSelectedProject)
 
   const shouldShowPromo = !isLoading && !hasSeenPromo
 
+  // Deferred 3D scene mount — let 2D UI paint first as LCP element
+  const [sceneReady, setSceneReady] = useState(false)
+  useEffect(() => {
+    if (isLoading) return
+    // Use requestIdleCallback (or setTimeout fallback) to defer 3D mount
+    const schedule = typeof requestIdleCallback !== 'undefined' ? requestIdleCallback : (cb: () => void) => setTimeout(cb, 100)
+    const id = schedule(() => {
+      startTransition(() => {
+        setSceneReady(true)
+      })
+    })
+    return () => {
+      if (typeof cancelIdleCallback !== 'undefined') {
+        cancelIdleCallback(id as number)
+      } else {
+        clearTimeout(id as number)
+      }
+    }
+  }, [isLoading])
+
   const { quip, showQuip } = useCommentaryQuip()
   const { showToast } = useToast()
-  const { playSound } = useArenaAudio()
+  const { playSound, nextTrack } = useArenaAudio()
   const [pyroActive, setPyroActive] = useState(false)
   const isNavigating = useRef(false)
 
 
   // Navigation Handler (Wheel / Touch)
   useEffect(() => {
-    if (isLoading || showPipebomb) return
+    if (isLoading || showPipebomb || selectedProject) return
 
     const handleWheel = (e: WheelEvent) => {
       if (isNavigating.current) return
@@ -68,13 +90,13 @@ function PortfolioContent() {
       if (nextScene !== activeScene) {
         isNavigating.current = true
         setActiveScene(nextScene)
-        setTimeout(() => { isNavigating.current = false }, 1500) // Cooling period
+        setTimeout(() => { isNavigating.current = false }, 800) // Cooling period
       }
     }
 
-    window.addEventListener('wheel', handleWheel)
+    window.addEventListener('wheel', handleWheel, { passive: true })
     return () => window.removeEventListener('wheel', handleWheel)
-  }, [isLoading, showPipebomb, activeScene, setActiveScene])
+  }, [isLoading, showPipebomb, selectedProject, activeScene, setActiveScene])
 
   // Konami Code Easter Egg
   useKonamiCode(useCallback(() => {
@@ -115,21 +137,37 @@ function PortfolioContent() {
       if (e.key === 'm' || e.key === 'M') {
         toggleMute()
         showToast({
-          headline: !isMuted ? '🔇 MUTED' : '🔊 UNMUTED',
-          body: !isMuted 
-            ? 'This tab is now silent. (Note: Check other open tabs!)' 
-            : 'The crowd and theme music are back!',
-          variant: !isMuted ? 'red' : 'gold',
+          headline: isMuted ? '🔊 UNMUTED' : '🔇 MUTED',
+          body: isMuted 
+            ? 'The crowd and theme music are back!'
+            : 'This tab is now silent. (Note: Check other open tabs!)',
+          variant: isMuted ? 'gold' : 'red',
+        })
+      }
+
+      if (e.key === 'n' || e.key === 'N') {
+        nextTrack()
+        showToast({
+          headline: '⏭️ NEXT TRACK',
+          body: 'Skipping to the next theme...',
+          variant: 'cyan',
         })
       }
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [showToast, toggleMute, isMuted])
+  }, [showToast, toggleMute, isMuted, nextTrack, playSound])
 
-  // Attitude Meter - global click counter
+  // Attitude Meter - throttled global click counter (max once per 500ms)
+  const lastAttitudeClick = useRef(0)
   useEffect(() => {
-    const handleClick = () => incrementAttitude()
+    const handleClick = () => {
+      const now = Date.now()
+      if (now - lastAttitudeClick.current >= 500) {
+        lastAttitudeClick.current = now
+        incrementAttitude()
+      }
+    }
     window.addEventListener('click', handleClick)
     return () => window.removeEventListener('click', handleClick)
   }, [incrementAttitude])
@@ -153,8 +191,8 @@ function PortfolioContent() {
         />
       )}
 
-      {/* 3D Arena Background */}
-      {!isLoading && (
+      {/* 3D Arena Background — deferred mount for LCP */}
+      {sceneReady && (
         <SceneWrapper>
           <Arena pyroActive={pyroActive} activeSection={activeScene} />
         </SceneWrapper>
@@ -383,7 +421,12 @@ function PortfolioContent() {
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                     {projects.map((project, index) => (
-                      <MatchCard key={project.slug} project={project} index={index} />
+                      <MatchCard
+                        key={project.slug}
+                        project={project}
+                        index={index}
+                        onClick={() => setSelectedProject(project.slug)}
+                      />
                     ))}
                   </div>
                 </div>
@@ -515,6 +558,7 @@ function PortfolioContent() {
               { key: 'M', label: 'MUTE' },
               { key: 'P', label: 'PYRO' },
               { key: 'E', label: 'NEWS' },
+              { key: 'N', label: 'NEXT' },
             ].map((btn) => (
               <div
                 key={btn.label}
@@ -540,6 +584,16 @@ function PortfolioContent() {
           </div>
         </main>
       )}
+
+      <AnimatePresence>
+        {selectedProject && (
+          <ProjectDetailOverlay
+            slug={selectedProject}
+            onClose={() => setSelectedProject(null)}
+            onNavigate={(slug) => setSelectedProject(slug)}
+          />
+        )}
+      </AnimatePresence>
     </>
   )
 }

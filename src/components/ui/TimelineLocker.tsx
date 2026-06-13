@@ -42,9 +42,7 @@ const TimelineLocker = ({ milestone, index }: TimelineLockerProps) => {
         }`,
       }}
       style={{
-        background: 'rgba(10, 10, 15, 0.45)',
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
+        background: 'rgba(18, 18, 26, 0.93)',
         border: '1px solid rgba(255, 255, 255, 0.08)',
         borderLeft: `3px solid ${style.color}`,
         borderRadius: '4px',

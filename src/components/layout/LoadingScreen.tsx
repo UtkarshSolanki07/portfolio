@@ -30,7 +30,7 @@ export default function LoadingScreen() {
     }
   }, [])
 
-  // Animate progress bar
+  // Animate progress bar — faster to reduce LCP delay
   useEffect(() => {
     let progress = 0
     let lastTime = performance.now()
@@ -40,8 +40,8 @@ export default function LoadingScreen() {
       const delta = now - lastTime
       lastTime = now
       
-      // Pseudo-random but stable increment
-      const increment = (Math.sin(now * 0.1) + 1.5) * (delta * 0.05)
+      // Faster increment: ~1.5s to reach 100% (was ~3-4s)
+      const increment = (Math.sin(now * 0.1) + 1.5) * (delta * 0.12)
       progress += increment
       
       if (progress >= 100) {
@@ -49,7 +49,7 @@ export default function LoadingScreen() {
         if (progressRef.current) clearInterval(progressRef.current)
       }
       setLoadingProgress(Math.min(progress, 100))
-    }, 80)
+    }, 50)
     
     return () => {
       if (progressRef.current) clearInterval(progressRef.current)
@@ -58,15 +58,25 @@ export default function LoadingScreen() {
 
   // Trigger logo slam after mount
   useEffect(() => {
-    const t1 = setTimeout(() => setShowLogo(true), 300)
-    const t2 = setTimeout(() => setShowContent(true), 800)
+    const t1 = setTimeout(() => setShowLogo(true), 200)
+    const t2 = setTimeout(() => setShowContent(true), 500)
     return () => {
       clearTimeout(t1)
       clearTimeout(t2)
     }
   }, [])
 
-  // Manual dismiss for audio autoplay compliance
+  // Auto-dismiss after progress completes (reduces LCP by not requiring a click)
+  useEffect(() => {
+    if (loadingProgress >= 100) {
+      const autoDismiss = setTimeout(() => {
+        setLoading(false)
+      }, 800) // Brief pause at 100% before auto-enter
+      return () => clearTimeout(autoDismiss)
+    }
+  }, [loadingProgress, setLoading])
+
+  // Manual dismiss (click anywhere or button)
   const handleDismiss = useCallback(() => {
     setLoading(false)
   }, [setLoading])

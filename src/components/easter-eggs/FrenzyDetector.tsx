@@ -17,13 +17,19 @@ export default function FrenzyDetector() {
   const [frenzyText, setFrenzyText] = useState<string | null>(null)
   const lastPos = useRef({ x: 0, y: 0 })
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const rafPending = useRef(false)
+  const pendingEvent = useRef<{ x: number; y: number } | null>(null)
 
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    const dx = e.clientX - lastPos.current.x
-    const dy = e.clientY - lastPos.current.y
+  const processMouseMove = useCallback(() => {
+    rafPending.current = false
+    const ev = pendingEvent.current
+    if (!ev) return
+
+    const dx = ev.x - lastPos.current.x
+    const dy = ev.y - lastPos.current.y
     const speed = Math.sqrt(dx * dx + dy * dy)
 
-    lastPos.current = { x: e.clientX, y: e.clientY }
+    lastPos.current = { x: ev.x, y: ev.y }
 
     if (speed > SPEED_THRESHOLD) {
       const text = FRENZY_TEXTS[Math.floor(Math.random() * FRENZY_TEXTS.length)]
@@ -36,8 +42,16 @@ export default function FrenzyDetector() {
     }
   }, [])
 
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    pendingEvent.current = { x: e.clientX, y: e.clientY }
+    if (!rafPending.current) {
+      rafPending.current = true
+      requestAnimationFrame(processMouseMove)
+    }
+  }, [processMouseMove])
+
   useEffect(() => {
-    window.addEventListener('mousemove', handleMouseMove)
+    window.addEventListener('mousemove', handleMouseMove, { passive: true })
     return () => {
       window.removeEventListener('mousemove', handleMouseMove)
       if (timeoutRef.current) clearTimeout(timeoutRef.current)

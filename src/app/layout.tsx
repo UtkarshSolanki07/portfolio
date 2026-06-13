@@ -58,12 +58,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${barlowCondensed.variable} ${rajdhani.variable} ${shareTechMono.variable} ${bebasNeue.variable}`}
         style={{
           fontFamily: "var(--font-rajdhani, 'Rajdhani', sans-serif)",
         }}
+        suppressHydrationWarning
       >
         <a href="#main-content" className="skip-link">
           Skip to main content

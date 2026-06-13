@@ -1,6 +1,6 @@
 'use client'
 
-import { memo } from 'react'
+import { memo, useState } from 'react'
 import { motion } from 'framer-motion'
 import type { Project } from '@/data/projects'
 
@@ -11,6 +11,7 @@ interface MatchCardProps {
 }
 
 const MatchCard = ({ project, index, onClick }: MatchCardProps) => {
+  const [isHovered, setIsHovered] = useState(false)
   const tierColors = {
     'main-event': { border: 'var(--gold)', bg: 'rgba(212,175,55,0.08)', glow: 'rgba(212,175,55,0.15)' },
     featured: { border: 'var(--cyan)', bg: 'rgba(0,229,255,0.08)', glow: 'rgba(0,229,255,0.15)' },
@@ -45,10 +46,10 @@ const MatchCard = ({ project, index, onClick }: MatchCardProps) => {
           onClick?.()
         }
       }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       style={{
-        background: 'rgba(10, 10, 15, 0.45)',
-        backdropFilter: 'blur(14px)',
-        WebkitBackdropFilter: 'blur(14px)',
+        background: 'rgba(18, 18, 26, 0.93)',
         border: `1px solid rgba(255, 255, 255, 0.08)`,
         borderLeft: `3px solid ${colors.border}`,
         borderRadius: '4px',
@@ -96,11 +97,12 @@ const MatchCard = ({ project, index, onClick }: MatchCardProps) => {
           style={{
             fontFamily: 'var(--font-mono)',
             fontSize: '0.45rem',
-            color: 'var(--text-dim)',
+            color: isHovered ? colors.border : 'var(--text-dim)',
             textTransform: 'uppercase',
+            transition: 'color 0.2s ease',
           }}
         >
-          {project.stack.length} TECH
+          {isHovered ? 'REPLAY MATCH ▶' : `${project.stack.length} TECH`}
         </span>
       </div>
 

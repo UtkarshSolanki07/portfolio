@@ -57,11 +57,12 @@ export default function Arena({ pyroActive = false, activeSection = 0 }: ArenaPr
     const t = clock.getElapsedTime()
     const wp = waypoints[activeSection] || waypoints[0]
 
-    // Smoothly lerp camera position
-    camera.position.lerp(wp.position, delta * 2)
+    // Frame-rate independent lerp using exponential decay (speed factor 4.5 for responsive feel)
+    const lerpFactor = 1 - Math.exp(-4.5 * delta)
+    camera.position.lerp(wp.position, lerpFactor)
 
     // Smoothly lerp camera target
-    currentTarget.current.lerp(wp.target, delta * 2)
+    currentTarget.current.lerp(wp.target, lerpFactor)
     camera.lookAt(currentTarget.current)
 
     // Add subtle floating "float" drift

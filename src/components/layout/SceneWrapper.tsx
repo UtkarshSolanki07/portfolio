@@ -1,8 +1,7 @@
 'use client'
 
-import { Suspense } from 'react'
+import { Suspense, useState, useEffect } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { Preload } from '@react-three/drei'
 import * as THREE from 'three'
 
 interface SceneWrapperProps {
@@ -10,6 +9,17 @@ interface SceneWrapperProps {
 }
 
 export default function SceneWrapper({ children }: SceneWrapperProps) {
+  // Start with on-demand rendering, switch to continuous after first paint
+  const [frameloop, setFrameloop] = useState<'demand' | 'always'>('demand')
+
+  useEffect(() => {
+    // After first frame paints, switch to continuous rendering
+    const raf = requestAnimationFrame(() => {
+      setFrameloop('always')
+    })
+    return () => cancelAnimationFrame(raf)
+  }, [])
+
   return (
     <div
       style={{
@@ -20,6 +30,7 @@ export default function SceneWrapper({ children }: SceneWrapperProps) {
       }}
     >
       <Canvas
+        frameloop={frameloop}
         shadows={{ type: THREE.PCFShadowMap }}
         dpr={[1, 1.5]}
         gl={{
@@ -39,7 +50,6 @@ export default function SceneWrapper({ children }: SceneWrapperProps) {
       >
         <Suspense fallback={null}>
           {children}
-          <Preload all />
         </Suspense>
       </Canvas>
     </div>

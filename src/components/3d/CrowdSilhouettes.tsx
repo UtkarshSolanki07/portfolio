@@ -77,21 +77,11 @@ export default function CrowdSilhouettes() {
     meshRef.current.instanceMatrix.needsUpdate = true
   }, [])
 
-  // Animate crowd bobbing — simplified update
+  // Animate crowd bobbing collectively for extreme performance (reduces CPU matrix calculations from 240/frame to 1)
   useFrame(({ clock }) => {
     if (!meshRef.current) return
     const t = clock.getElapsedTime()
-
-    // We can optimize this by only updating every other frame or using a simpler wave
-    POSITIONS.forEach((p, i) => {
-      const wave = Math.sin(t * 1.5 + p.phase) * 0.1
-      dummy.current.position.set(p.x, p.y + wave, p.z)
-      dummy.current.scale.set(p.scale * 0.35, p.scale + wave * 0.1, p.scale * 0.2)
-      dummy.current.rotation.set(0, -Math.atan2(p.x, p.z), 0)
-      dummy.current.updateMatrix()
-      meshRef.current!.setMatrixAt(i, dummy.current.matrix)
-    })
-    meshRef.current.instanceMatrix.needsUpdate = true
+    meshRef.current.position.y = Math.sin(t * 1.5) * 0.05
   })
 
   return (
@@ -117,19 +107,19 @@ export default function CrowdSilhouettes() {
         />
       </instancedMesh>
 
-      {/* Crowd cheering flash lights — reduced count for performance */}
-      {Array.from({ length: 12 }).map((_, i) => {
-        const t = i / 11
+      {/* Crowd cheering flash lights — reduced to 4 for performance */}
+      {Array.from({ length: 4 }).map((_, i) => {
+        const t = i / 3
         const startAngle = -0.15 * Math.PI
         const endAngle = 1.15 * Math.PI
         const angle = startAngle + t * (endAngle - startAngle)
-        const r = 13 + Math.sin(i * 7.3) * 4
+        const r = 15 + Math.sin(i * 7.3) * 3
         return (
           <pointLight
             key={`crowd-light-${i}`}
             position={[Math.cos(angle) * r, 2.5, Math.sin(angle) * r]}
-            intensity={2}
-            distance={15}
+            intensity={4}
+            distance={20}
             decay={2}
             color={i % 3 === 0 ? '#d4af37' : i % 3 === 1 ? '#ff1744' : '#00e5ff'}
           />
